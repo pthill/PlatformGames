@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "游戏服务器", "游戏服务器\GameServer.vcxproj", "{2538D83D-A81C-41CB-893F-4E6839CE477C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "服务器控制", "服务器控制\ServerControl.vcxproj", "{22BAE27A-BAC0-4053-BDD7-86858780C625}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "机器人服务", "机器人服务\AndroidService.vcxproj", "{B7228796-2277-4487-ACB9-52AC97810583}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "游戏客户端", "游戏客户端\GameClient.vcxproj", "{7D0F35A6-E300-4D49-A3D3-873A8F3CDDCB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2538D83D-A81C-41CB-893F-4E6839CE477C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2538D83D-A81C-41CB-893F-4E6839CE477C}.Debug|Win32.Build.0 = Debug|Win32
+		{2538D83D-A81C-41CB-893F-4E6839CE477C}.Release|Win32.ActiveCfg = Release|Win32
+		{2538D83D-A81C-41CB-893F-4E6839CE477C}.Release|Win32.Build.0 = Release|Win32
+		{22BAE27A-BAC0-4053-BDD7-86858780C625}.Debug|Win32.ActiveCfg = Debug|Win32
+		{22BAE27A-BAC0-4053-BDD7-86858780C625}.Debug|Win32.Build.0 = Debug|Win32
+		{22BAE27A-BAC0-4053-BDD7-86858780C625}.Release|Win32.ActiveCfg = Release|Win32
+		{22BAE27A-BAC0-4053-BDD7-86858780C625}.Release|Win32.Build.0 = Release|Win32
+		{B7228796-2277-4487-ACB9-52AC97810583}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B7228796-2277-4487-ACB9-52AC97810583}.Debug|Win32.Build.0 = Debug|Win32
+		{B7228796-2277-4487-ACB9-52AC97810583}.Release|Win32.ActiveCfg = Release|Win32
+		{B7228796-2277-4487-ACB9-52AC97810583}.Release|Win32.Build.0 = Release|Win32
+		{7D0F35A6-E300-4D49-A3D3-873A8F3CDDCB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D0F35A6-E300-4D49-A3D3-873A8F3CDDCB}.Debug|Win32.Build.0 = Debug|Win32
+		{7D0F35A6-E300-4D49-A3D3-873A8F3CDDCB}.Release|Win32.ActiveCfg = Release|Win32
+		{7D0F35A6-E300-4D49-A3D3-873A8F3CDDCB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
