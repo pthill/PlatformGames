@@ -69,6 +69,7 @@
 #pragma comment (lib,"../../../开发库/Lib/Unicode/GameEngine.lib")
 #pragma comment (lib,"../../../开发库/Lib/Unicode/SkinControl.lib")
 #pragma comment (lib,"../../../开发库/Lib/Unicode/ServiceCore.lib")
+#pragma comment (lib,"../../../开发库/Lib/Unicode/ShareControl.lib")
 #endif
 #else
 #ifndef _UNICODE

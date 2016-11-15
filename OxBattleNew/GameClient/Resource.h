@@ -39,12 +39,15 @@
 #define IDC_ENABLE_SOUND                1002
 #define IDC_ALLOW_LOOKON                1003
 #define IDC_CARD_SPACE                  1009
+#define IDB_BT_CLOSE					1200
+#define IDB_BT_BANK						1201
+#define IDB_BT_MIN						1202
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        203
+#define _APS_NEXT_RESOURCE_VALUE        218
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101

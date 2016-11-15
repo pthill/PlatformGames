@@ -7,7 +7,20 @@
 #include "ClientControl.h"
 #include "SpeClientControl.h"
 #include "GameLogic.h"
-//////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+#define FRAME_CAPTION					30								//框架头高
+#define FRAME_LX						222								//上下图像
+#define FRAME_LY						84								//上下图像
+#define FRAME_TX						127								//左右图像
+#define FRAME_TY						147								//左右图像
+#define FRAME_LX_NICK					70								//上下高度
+#define FRAME_LY_NICK					6								//上下高度
+#define FRAME_TX_NICK					6								//左右高度
+#define FRAME_TY_NICK					65								//左右高度
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 //消息定义
 #define IDM_HINT_OX					WM_USER+99							//提示消息
@@ -26,13 +39,17 @@
 #define IDM_BANKER					WM_USER+112							//做庄消息
 #define IDM_CLICK_CARD				WM_USER+114							//点击消息
 #define IDM_YU_YIN					(WM_USER+209)						//语音控制
-#define IDM_ADMIN_WND				(WM_USER + 219)							//控制窗口
-#define IDM_LBUTTONDOWN_VIEW		(WM_USER + 220)							//左键视图
+#define IDM_ADMIN_WND				(WM_USER + 219)						//控制窗口
+#define IDM_LBUTTONDOWN_VIEW		(WM_USER + 220)						//左键视图
+#define WM_SET_CAPTION				WM_USER+229							//窗口消息
+
+
+//////////////////////////////////////////////////////////////////////////////////////
 
 #define MY_VIEW_CHAIRID				2									//椅子位置
 #define	DRAW_HEIGHT					34									//绘画高度
 
-/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 //结构定义
 
 //筹码状态
@@ -128,7 +145,7 @@ public:
 
 	//控件变量
 public:
-	//CScoreView						m_ScoreView;						//成绩窗口
+	//CScoreView					m_ScoreView;						//成绩窗口
 	CCardControl					m_CardControl[GAME_PLAYER];			//用户扑克
 	CCardControl					m_CardControlOx[GAME_PLAYER];		//用户扑克
 
@@ -157,8 +174,8 @@ protected:
 	//界面变量
 protected:
 	CPngImage						m_ImageCard;						//扑克资源
-	CPngImage						m_ImageViewFill;						//背景资源
-	CPngImage						m_ImageViewCenter;						//居中背景
+	CPngImage						m_ImageViewFill;					//背景资源
+	CPngImage						m_ImageViewCenter;					//居中背景
 
 	CBitImage						m_ImageJeton;						//筹码资源
 	CBitImage						m_ImageOpenCard;					//摊牌资源
@@ -189,11 +206,23 @@ protected:
 	CPngImage						m_PngOxAddNum;						//+数数据
 	CPngImage						m_PngOxAddType;						//+数数据
 	
+protected:
+	CString							m_strCaption;						//标题
+	CDFontEx						m_fontCaption;						//标题字体
 
+	//边框资源
+protected:
+	CPngImage						m_ImageGameFrame[8];				//游戏框架
 
 	//提示变量
 protected:
 	CToolTipCtrl					m_ToolTipCtrl;						//提示控件
+
+	//控件变量
+protected:
+	CSkinButton						m_btMin;							//最小化按钮
+	CSkinButton						m_btClose;							//关闭按钮
+	CSkinButton						m_btBank;							//银行按钮
 
 	//函数定义
 public:
@@ -217,7 +246,13 @@ private:
 	virtual VOID RectifyControl(int nWidth, int nHeight);
 	//绘画界面
 	virtual VOID DrawGameView(CDC * pDC, int nWidth, int nHeight);
-	
+	//绘画框架
+	void DrawGameFrame(CDC *pDC, int nWidth, int nHeight);
+
+	//辅助功能
+public:
+	// 添加小数点
+	CString AddDecimal( LONGLONG lScore ,  bool bComma = true, bool bPlus = false);
 
 	//WIN7支持
 public:
@@ -282,7 +317,7 @@ public:
 	//绘画数字
 	void DrawNumberString(CDC * pDC, LONGLONG lNumber, INT nXPos, INT nYPos, BYTE bPngType);
 	//调整扩展
-	void CGameClientView::RectifyControlEx();
+	void RectifyControlEx();
 
 	//消息映射
 protected:
@@ -290,7 +325,14 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	//定时器消息
 	afx_msg void OnTimer(UINT nIDEvent);
+	//按钮
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint Point);
+	//标题
+	afx_msg LRESULT OnSetCaption(WPARAM wParam, LPARAM lParam);
+	//最小按钮	
+	afx_msg void OnButtonMin();
+	//关闭按钮	
+	afx_msg void OnButtonClose();
 
 	DECLARE_MESSAGE_MAP()
 };

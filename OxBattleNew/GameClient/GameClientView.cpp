@@ -42,6 +42,10 @@
 #define	SEND_PELS						80								//发牌速度
 #define	TIME_SENDSPEED					50								//间隔速度
 
+//按钮标识
+#define IDC_MIN							226								//设置按钮标识
+#define IDC_CLOSE						227								//设置按钮标识
+#define IDC_BANK						214								//银行按钮
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -51,7 +55,11 @@ BEGIN_MESSAGE_MAP(CGameClientView, CGameFrameViewGDI)
 	ON_BN_CLICKED(IDC_ADMIN,OpenAdminWnd)
 	ON_WM_TIMER()
 	ON_WM_LBUTTONDOWN()
+	ON_MESSAGE(WM_SET_CAPTION, OnSetCaption)
 
+	//关闭按钮
+	ON_BN_CLICKED(IDC_MIN, OnButtonMin)
+	ON_BN_CLICKED(IDC_CLOSE, OnButtonClose)
 END_MESSAGE_MAP()
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,6 +75,7 @@ CGameClientView::CGameClientView()
 		m_bOxValue[i]=0xff;
 		m_SendEndingPos[i].SetPoint(0,0);
 	}
+
 	m_wSendCount=0;
 	m_wSendIndex=0;
 	m_SendCardPos.SetPoint(0,0);
@@ -137,7 +146,7 @@ CGameClientView::CGameClientView()
 //析构函数
 CGameClientView::~CGameClientView()
 {
-	/*if( m_pSpeClientControlDlg )
+	/* if( m_pSpeClientControlDlg )
 	{
 		delete m_pSpeClientControlDlg;
 		m_pSpeClientControlDlg = NULL;
@@ -147,7 +156,7 @@ CGameClientView::~CGameClientView()
 	{
 		FreeLibrary(m_hSpeInst);
 		m_hSpeInst = NULL;
-	}*/
+	} */
 }
 
 //消息解释
@@ -214,6 +223,19 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_btBanker.SetButtonImage(IDB_BANKER,hInstance,false,false);
 	m_btIdler.SetButtonImage(IDB_IDLER,hInstance,false,false);
 
+	//游戏框架
+	m_ImageGameFrame[0].LoadImage(hInstance,TEXT("FRAME_TL"));
+	m_ImageGameFrame[1].LoadImage(hInstance,TEXT("FRAME_TM"));
+	m_ImageGameFrame[2].LoadImage(hInstance,TEXT("FRAME_TR"));
+	m_ImageGameFrame[3].LoadImage(hInstance,TEXT("FRAME_LM"));
+	m_ImageGameFrame[4].LoadImage(hInstance,TEXT("FRAME_RM"));
+	m_ImageGameFrame[5].LoadImage(hInstance,TEXT("FRAME_BL"));
+	m_ImageGameFrame[6].LoadImage(hInstance,TEXT("FRAME_BM"));
+	m_ImageGameFrame[7].LoadImage(hInstance,TEXT("FRAME_BR")); 
+	
+	//标题字体
+	m_fontCaption.CreateFont( this, TEXT("宋体"), 12, 400 );
+
 	//创建控件
 	for (WORD i=0;i<GAME_PLAYER;i++)
 	{
@@ -224,7 +246,7 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
     //按钮提示
 	m_ToolTipCtrl.Create(this);
 	m_ToolTipCtrl.Activate(TRUE);
-//	m_ToolTipCtrl.AddTool(&m_btShortcut,TEXT("牛提示快捷键"));
+	// m_ToolTipCtrl.AddTool(&m_btShortcut,TEXT("牛提示快捷键"));
 
 #ifdef VIDEO_GAME
 	//创建视频
@@ -239,10 +261,10 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 #endif
 
-	//BYTE bCardData[3] = {0x01,0x02,0x03};
-	//BYTE bCardDataOx[2] = {0x04,0x05};
+	// BYTE bCardData[3] = {0x01,0x02,0x03};
+	// BYTE bCardDataOx[2] = {0x04,0x05};
 
-	//配置控件
+	// 配置控件
 	for (int i=0;i<GAME_PLAYER;i++)
 	{
 		m_CardControlOx[i].SetDisplayFlag(true);
@@ -256,29 +278,40 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		}
 
 
-		//m_CardControl[i].SetCardData(bCardData,3);
-		//m_CardControlOx[i].SetCardData(bCardDataOx,2);
+		// m_CardControl[i].SetCardData(bCardData,3);
+		// m_CardControlOx[i].SetCardData(bCardDataOx,2);
 	}
 
 	//特殊控制
-	//m_hSpeInst = NULL;
-	//m_pSpeClientControlDlg = NULL;
-	//m_hSpeInst = LoadLibrary(TEXT("OxSpeClientControl.dll"));
-	/*if ( m_hSpeInst )
+	// m_hSpeInst = NULL;
+	// m_pSpeClientControlDlg = NULL;
+	// m_hSpeInst = LoadLibrary(TEXT("OxSpeClientControl.dll"));
+
+	/* if ( m_hSpeInst )
 	{
 		typedef void * (*CREATE)(CWnd* pParentWnd); 
-		CREATE ClientControl = (CREATE)GetProcAddress(m_hSpeInst,"CreateClientControl"); 
+		CREATE ClientControl = (CREATE)GetProcAddress( m_hSpeInst, "CreateClientControl" ); 
 		if ( ClientControl )
 		{
 			m_pSpeClientControlDlg = static_cast<ISpeClientControlDlg*>(ClientControl(this));
 			m_pSpeClientControlDlg->ShowWindow( SW_HIDE );
 		}
-	}*/
+	} */
 
 
 	//控制按钮
 	m_btOpenAdmin.Create(NULL, WS_CHILD|WS_VISIBLE, CRect(4, 4, 11, 11), this, IDC_ADMIN);
 	m_btOpenAdmin.ShowWindow(SW_HIDE);
+
+	//框架按钮
+	m_btMin.Create(NULL,WS_CHILD|WS_VISIBLE,rcCreate,this,IDC_MIN);
+	m_btClose.Create(NULL,WS_CHILD|WS_VISIBLE,rcCreate,this,IDC_CLOSE);
+	// m_btBank.Create(NULL,WS_CHILD|WS_VISIBLE,rcCreate,this,IDC_BANK);
+
+	HINSTANCE hResInstance = AfxGetInstanceHandle();
+	m_btMin.SetButtonImage( IDB_BT_MIN,hResInstance,false, false );
+	m_btClose.SetButtonImage( IDB_BT_CLOSE, hResInstance, false, false);
+	// m_btBank.SetButtonImage( IDB_BT_BANK, hResInstance, false, false);
 
 	return 0;
 }
@@ -383,6 +416,7 @@ VOID CGameClientView::ResetGameView()
 	{
 		m_bOxValue[i]=0xff;
 	}
+
 	m_wSendCount=0;
 	m_wSendIndex=0;
 	m_cbDynamicJoin=FALSE;
@@ -455,69 +489,69 @@ VOID CGameClientView::RectifyControl(int nWidth, int nHeight)
 	//发牌位置
 	m_SendStartPos.SetPoint(nWidth/2,nHeight/2-30);
 
-	m_ptAvatar[0].x=nWidth/2-FACE_CX/2-45;
-	m_ptAvatar[0].y=9+6;
-	m_ptNickName[0].x=nWidth/2+35-50;
-	m_ptNickName[0].y=9+14; 
-	m_ptJeton[0].x=nWidth/2-49;
-	m_ptJeton[0].y=210;
-	m_ptCard[0].x=m_ptJeton[0].x;
-	m_ptCard[0].y=m_ptJeton[0].y-100; 
-	m_ptReady[0].x=m_ptAvatar[0].x-80;
-	m_ptReady[0].y=m_ptAvatar[0].y+83;
-	m_ptClock[0].x=m_ptAvatar[0].x+190;
-	m_ptClock[0].y=m_ptAvatar[0].y+23;
-	m_PointBanker[0].x = m_ptAvatar[0].x - 55;
-	m_PointBanker[0].y =m_ptAvatar[0].y + 3;
+	m_ptAvatar[0].x=nWidth/2-FRAME_LX/2;
+	m_ptAvatar[0].y=FRAME_CAPTION+18;
+	m_ptNickName[0].x=m_ptAvatar[0].x+FRAME_LX_NICK;
+	m_ptNickName[0].y=m_ptAvatar[0].y+FRAME_LY_NICK; 
+	m_ptJeton[0].x=nWidth/2-98/2;
+	m_ptJeton[0].y=m_ptAvatar[0].y+120+67;
+	m_ptCard[0].x=m_ptAvatar[0].x;
+	m_ptCard[0].y=m_ptAvatar[0].y+120; 
+	m_ptReady[0].x=nWidth/2-33;
+	m_ptReady[0].y=m_ptAvatar[0].y+FRAME_LY+20;
+	m_ptClock[0].x=m_ptAvatar[0].x-56;
+	m_ptClock[0].y=m_ptAvatar[0].y+36;
+	m_PointBanker[0].x=m_ptAvatar[0].x+FRAME_LX-20;
+	m_PointBanker[0].y=m_ptAvatar[0].y+10;
 	m_ptValue[0].x=nWidth/2+85;
 	m_ptValue[0].y=129;
 
-	m_ptAvatar[2].x=nWidth/2-361;
-	m_ptAvatar[2].y=nHeight-120;
-	m_ptNickName[2].x=m_ptAvatar[2].x-5;
-	m_ptNickName[2].y=m_ptAvatar[2].y +FACE_CY+16;
+	m_ptAvatar[2].x=30;
+	m_ptAvatar[2].y=nHeight-FRAME_LY-9;
+	m_ptNickName[2].x=m_ptAvatar[2].x+FRAME_LX_NICK;
+	m_ptNickName[2].y=m_ptAvatar[2].y+FRAME_LY_NICK;
 	m_ptJeton[2].x=nWidth/2-49;
 	m_ptJeton[2].y=nHeight-300;
 	m_ptCard[2].x=m_ptJeton[2].x;
 	m_ptCard[2].y=m_ptJeton[2].y+90;
-	m_ptReady[2].x=nWidth/2 - 33;
+	m_ptReady[2].x=nWidth/2-33;
 	m_ptReady[2].y=m_ptAvatar[2].y-160;
-	m_ptClock[2].x=m_ptAvatar[2].x+(FACE_CX-65)/2+32;
-	m_ptClock[2].y=m_ptAvatar[2].y-52;
-	m_PointBanker[2].x = m_ptAvatar[2].x - 54+121;
-	m_PointBanker[2].y =m_ptAvatar[2].y +FACE_CY-39+67;
+	m_ptClock[2].x=m_ptAvatar[2].x+FRAME_LX-46;
+	m_ptClock[2].y=m_ptAvatar[2].y-58;
+	m_PointBanker[2].x=m_ptAvatar[2].x+FRAME_LX-20;
+	m_PointBanker[2].y=m_ptAvatar[2].y+10;
 	m_ptValue[2].x=nWidth/2+85-130;
 	m_ptValue[2].y=nHeight-200;
 
-	m_ptAvatar[1].x=nWidth-FACE_CX-16-5;
-	m_ptAvatar[1].y=nHeight/2-FACE_CY/2-25;
-	m_ptNickName[1].x=m_ptAvatar[1].x-5;  
-	m_ptNickName[1].y=m_ptAvatar[1].y+FACE_CY+6+9;
+	m_ptAvatar[1].x=nWidth-FRAME_TX;
+	m_ptAvatar[1].y=nHeight/2-FRAME_TY/2;
+	m_ptNickName[1].x=m_ptAvatar[1].x+FRAME_TX_NICK;
+	m_ptNickName[1].y=m_ptAvatar[1].y+FRAME_TY_NICK;
 	m_ptJeton[1].x=nWidth-328+25-36;
 	m_ptJeton[1].y=nHeight/2-62;
 	m_ptCard[1].x=m_ptJeton[1].x+100; 
 	m_ptCard[1].y=m_ptJeton[1].y;
 	m_ptReady[1].x=m_ptAvatar[1].x-160;
 	m_ptReady[1].y=m_ptAvatar[1].y-70;
-	m_ptClock[1].x=m_ptAvatar[1].x+22;
-	m_ptClock[1].y=m_ptAvatar[1].y-50;
+	m_ptClock[1].x=m_ptAvatar[1].x+5;
+	m_ptClock[1].y=m_ptAvatar[1].y-68;
 	m_PointBanker[1].x = m_ptAvatar[1].x+2;
 	m_PointBanker[1].y = m_ptAvatar[1].y-40+157;
 	m_ptValue[1].x=nWidth-180;
 	m_ptValue[1].y=nHeight/2+40;
 
-	m_ptAvatar[3].x=18;
-	m_ptAvatar[3].y=nHeight/2-FACE_CY/2-25;
-	m_ptNickName[3].x=m_ptAvatar[3].x-5;
-	m_ptNickName[3].y=m_ptAvatar[3].y+FACE_CY+6+9;
+	m_ptAvatar[3].x=30;
+	m_ptAvatar[3].y=nHeight/2-FRAME_TY/2;
+	m_ptNickName[3].x=m_ptAvatar[3].x+FRAME_TX_NICK;;
+	m_ptNickName[3].y=m_ptAvatar[3].y+FRAME_TY_NICK;;
 	m_ptJeton[3].x=263-30+10;
 	m_ptJeton[3].y=nHeight/2-62;
 	m_ptCard[3].x=m_ptJeton[3].x-100; 
 	m_ptCard[3].y=m_ptJeton[3].y;
 	m_ptReady[3].x=m_ptAvatar[3].x+140;
 	m_ptReady[3].y=m_ptAvatar[3].y-70;
-	m_ptClock[3].x=m_ptAvatar[3].x+22;
-	m_ptClock[3].y=m_ptAvatar[3].y-50;
+	m_ptClock[3].x=m_ptAvatar[3].x+FRAME_TX-56;
+	m_ptClock[3].y=m_ptAvatar[3].y-56;
 	m_PointBanker[3].x =m_ptAvatar[3].x+2;
 	m_PointBanker[3].y =m_ptAvatar[3].y-40+157;
 	m_ptValue[3].x=99;
@@ -579,6 +613,11 @@ VOID CGameClientView::RectifyControl(int nWidth, int nHeight)
 
 	m_btYuYin.GetWindowRect(&rcButton);
 	DeferWindowPos(hDwp,m_btYuYin,NULL,nWidth/2,nHeight-rcButton.Height()-5,0,0,uFlags);
+	
+	//查看路子
+	DeferWindowPos(hDwp, m_btMin, NULL, nWidth-10-(25*2)-5, 2, 0, 0, uFlags|SWP_NOSIZE);
+	DeferWindowPos(hDwp, m_btClose, NULL, nWidth-10-25, 2, 0, 0, uFlags|SWP_NOSIZE);
+	// DeferWindowPos(hDwp, m_btBank, NULL, 17, nHeight-247, 0, 0, uFlags|SWP_NOSIZE);
 
 #ifdef VIDEO_GAME
 	//视频窗口
@@ -591,7 +630,7 @@ VOID CGameClientView::RectifyControl(int nWidth, int nHeight)
 	//查分按钮
 	CRect rcScore;
 	m_btScore.GetWindowRect(&rcScore);
-	DeferWindowPos(hDwp,m_btScore,NULL,nWidth-40,25,0,0,uFlags);
+	DeferWindowPos(hDwp,m_btScore,NULL,nWidth-45,45,0,0,uFlags);
 
 	//结束移动
 	EndDeferWindowPos(hDwp);
@@ -611,8 +650,10 @@ VOID CGameClientView::RectifyControl(int nWidth, int nHeight)
 VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 {
 	//绘画背景 
-	//DrawViewImage(pDC,m_ImageViewCenter,DRAW_MODE_SPREAD);
-	//DrawViewImage(pDC,m_ImageViewBack,DRAW_MODE_CENTENT);
+	
+	//DrawViewImage( pDC, m_ImageViewCenter, DRAW_MODE_SPREAD );
+	//DrawViewImage( pDC, m_ImageViewBack, DRAW_MODE_CENTENT );
+
 	for ( int iW = 0 ; iW < nWidth; iW += m_ImageViewFill.GetWidth() )
 	{
 		for ( int iH = 0;  iH < nHeight; iH += m_ImageViewFill.GetHeight() )
@@ -620,11 +661,13 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 			m_ImageViewFill.DrawImage(pDC, iW, iH);
 		}
 	}
+
 	m_ImageViewCenter.DrawImage( pDC, nWidth/2 - m_ImageViewCenter.GetWidth()/2, nHeight/2 - m_ImageViewCenter.GetHeight()/2 );
 
+	//玩家
 	for (WORD i=0;i<GAME_PLAYER;i++)
 	{
-		if (i==0)
+		if (i==0 || i==2)
 			m_PngFrameTB.DrawImage(pDC,m_ptAvatar[i].x-9,m_ptAvatar[i].y-9);
 		else
 			m_PngFrameLR.DrawImage(pDC,m_ptAvatar[i].x-15,m_ptAvatar[i].y-14);
@@ -654,16 +697,21 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 			TCHAR szBuffer[64]=TEXT("");
 
 			//用户名字
-			int nTextWidth = (i==0?80:64);			
+			int nTextWidth = 100;			
 			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%s"),pIClientUserItem->GetNickName());
 			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+18);
 			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), nTextFormat);
 
 			//用户金币			
 			LONGLONG lLeaveScore=pIClientUserItem->GetUserScore()-(pIClientUserItem->GetUserStatus()!=US_PLAYING?0:m_lTableScore[i]);
-			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%I64d"),lLeaveScore);
-			rcUserInfo.SetRect(m_ptNickName[i].x+18,m_ptNickName[i].y+20,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+37);
-			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), DT_LEFT|DT_TOP|DT_END_ELLIPSIS|DT_NOCLIP);
+			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%s"),AddDecimal(lLeaveScore));
+			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+20,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+37);
+			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), DT_CENTER|DT_TOP|DT_NOCLIP);
+			
+			//用户IP		
+			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%s"),pIClientUserItem->GetNickName());
+			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+41,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+46);
+			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), nTextFormat);
 
 			//其他信息
 			if (wUserTimer!=0)
@@ -682,10 +730,19 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 			}
 
 			//绘画属性
-			pDC->FillSolidRect(m_ptAvatar[i].x-2,m_ptAvatar[i].y-2,52,52,RGB(255,255,255));
-			DrawUserAvatar(pDC,m_ptAvatar[i].x,m_ptAvatar[i].y,pIClientUserItem);
+			if (i==0 || i==2)
+			{
+				pDC->FillSolidRect(m_ptAvatar[i].x+2,m_ptAvatar[i].y+6,52,52,RGB(255,255,255));
+				DrawUserAvatar(pDC,m_ptAvatar[i].x+5,m_ptAvatar[i].y+9,pIClientUserItem);
+			}
+			else
+			{
+				pDC->FillSolidRect(m_ptAvatar[i].x+22,m_ptAvatar[i].y+2,52,52,RGB(255,255,255));
+				DrawUserAvatar(pDC,m_ptAvatar[i].x+25,m_ptAvatar[i].y+5,pIClientUserItem);
+			}
 
 		}
+
 		//else
 		//{
 		//	m_CardControl[i].SetOX(false);
@@ -749,7 +806,7 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 
 			//绘画信息
 			TCHAR tc[LEN_ACCOUNTS]=TEXT("");
-			_sntprintf(tc,CountArray(tc),TEXT("%I64d"),m_lTableScore[i]);
+			_sntprintf(tc,CountArray(tc),TEXT("%s"),AddDecimal(m_lTableScore[i]));
 			CRect rcDraw(nX+10,nY+10,nX+86,nY+35);
 			m_FontEx.DrawText(pDC,tc,&rcDraw,RGB(42,67,68),DT_VCENTER|DT_CENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 		}
@@ -885,7 +942,7 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 	if (m_bShowScore==true)
 	{
 		//积分背景
-		m_PngHistoryScore.DrawImage(pDC,nWidth-40-m_sizeHistory.cx,5);
+		m_PngHistoryScore.DrawImage(pDC,nWidth-40-m_sizeHistory.cx,FRAME_CAPTION+5);
 
 		//计算位置
 		INT nYBenchmark=22;
@@ -910,8 +967,8 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 
 			//构造信息
 			TCHAR szTurnScore[16]=TEXT(""),szCollectScore[16]=TEXT("");
-			_sntprintf(szTurnScore,CountArray(szTurnScore),TEXT("%I64d"),m_pHistoryScore[i]->lTurnScore);
-			_sntprintf(szCollectScore,CountArray(szCollectScore),TEXT("%I64d"),m_pHistoryScore[i]->lCollectScore);
+			_sntprintf(szTurnScore,CountArray(szTurnScore),TEXT("%s"),AddDecimal(m_pHistoryScore[i]->lTurnScore));
+			_sntprintf(szCollectScore,CountArray(szCollectScore),TEXT("%s"),AddDecimal(m_pHistoryScore[i]->lCollectScore));
 
 			//绘画信息
 			COLORREF crf;
@@ -925,9 +982,101 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 		}
 	}
 
+	//绘画框架
+	DrawGameFrame(pDC, nWidth, nHeight);
+
+	//标题
+	CRect rcCaption(5,7,1024,30);
+	m_fontCaption.DrawText( pDC, m_strCaption, rcCaption, RGB(255,255,255), DT_VCENTER|DT_LEFT);
+
 	return;
 }
 
+//绘画框架
+void CGameClientView::DrawGameFrame(CDC *pDC, int nWidth, int nHeight)
+{
+	//上部分
+	m_ImageGameFrame[0].DrawImage(pDC,0,0);
+	for (int i=m_ImageGameFrame[0].GetWidth();i<nWidth-m_ImageGameFrame[2].GetWidth();i+=m_ImageGameFrame[1].GetWidth())
+	{
+		m_ImageGameFrame[1].DrawImage(pDC,i,0);
+	}
+	m_ImageGameFrame[2].DrawImage(pDC,nWidth-m_ImageGameFrame[2].GetWidth(),0);
+
+	//中间两边部分
+	for (int iH=m_ImageGameFrame[0].GetHeight();iH<nHeight-m_ImageGameFrame[3].GetHeight();iH+=m_ImageGameFrame[3].GetHeight())
+	{
+		m_ImageGameFrame[3].DrawImage(pDC,0,iH);
+		m_ImageGameFrame[4].DrawImage(pDC,nWidth-m_ImageGameFrame[4].GetWidth(),iH);
+	}
+	
+	//下部分
+	m_ImageGameFrame[5].DrawImage(pDC,0,nHeight-m_ImageGameFrame[5].GetHeight());
+	for (int i=m_ImageGameFrame[5].GetWidth();i<nWidth-m_ImageGameFrame[6].GetWidth();i+=m_ImageGameFrame[6].GetWidth())
+	{
+		m_ImageGameFrame[6].DrawImage(pDC,i,nHeight-m_ImageGameFrame[6].GetHeight());
+	}	
+	m_ImageGameFrame[7].DrawImage(pDC,nWidth-m_ImageGameFrame[7].GetWidth(),nHeight-m_ImageGameFrame[7].GetHeight());
+}
+
+
+// 添加小数点
+CString CGameClientView::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, bool bPlus /*= false*/)
+{
+	CString strScore;
+	CString strReturn;
+	LONGLONG lNumber = lScore;
+	if ( lScore < 0 )
+		lNumber = -lNumber;
+
+	strScore.Format(TEXT("%I64d"), lNumber);
+
+	//长度
+	int nLength = strScore.GetLength();
+	if (nLength==0) 
+	{
+		strReturn.Insert(0, TEXT("0.00") );
+	}
+	else if (nLength==1) {
+		strReturn.Insert(0, TEXT("0.0") );
+	}
+	if (nLength==2) 
+	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
+		strReturn.Insert(0, TEXT("0.") );
+	}
+	else if(nLength>2)
+	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
+		strReturn.Insert(0, TEXT(".") );
+
+		int nStrCount = 0;
+		for( int i = strScore.GetLength() - 3; i >= 0; )
+		{
+			if( (nStrCount%3)==0 && nStrCount!=0 && bComma)
+			{
+				strReturn.Insert(0, ',');
+				nStrCount = 0;
+			}
+			else
+			{
+				strReturn.Insert(0, strScore.GetAt(i));
+				nStrCount++;
+				i--;
+			}
+		}
+	}
+
+	if ( lScore < 0 )
+		strReturn.Insert(0, '-');
+
+	if ( bPlus && lScore > 0 )
+		strReturn.Insert(0, '+');
+
+	return strReturn;
+}
 
 //绘画数字
 void CGameClientView::DrawNumberString(CDC * pDC, LONGLONG lNumber, INT nXPos, INT nYPos, BYTE bPngType)
@@ -1561,6 +1710,10 @@ void CGameClientView::OnLButtonDown(UINT nFlags, CPoint Point)
 	//发送引擎消息
 	SendEngineMessage(IDM_LBUTTONDOWN_VIEW, 0, 0);
 
+	//更新窗口
+	LPARAM lParam = MAKEWPARAM(Point.x,Point.y);
+	AfxGetMainWnd()->PostMessage(WM_LBUTTONDOWN,0,lParam);
+
 	return;
 }
 
@@ -1587,4 +1740,43 @@ void CGameClientView::RefreshGameView(CRect &rect)
 
 	return;
 }
+
+//设置标题
+LRESULT CGameClientView::OnSetCaption(WPARAM wParam, LPARAM lParam)
+{
+	m_strCaption = (LPCTSTR)lParam;
+	CRect rcCaption(5, 0, 1024, FRAME_CAPTION);
+	CDC* pDC = GetDC();
+	
+	SetWindowText(TEXT("100"));
+	return 0;
+}
+
+//游戏最小化
+void CGameClientView::OnButtonMin()
+{
+	AfxGetMainWnd()->PostMessage(WM_COMMAND,IDC_MIN,0);
+}
+
+//关闭游戏
+void CGameClientView::OnButtonClose()
+{
+	CGameClientEngine *pGameClientEngine=CONTAINING_RECORD( this, CGameClientEngine, m_GameClientView);
+	if ( pGameClientEngine->GetGameStatus()!=GAME_STATUS_FREE )
+	{
+		//提示消息
+		CInformation Information(this);
+		INT nRes=0;
+		nRes = Information.ShowMessageBox( TEXT("您正在游戏中，确定要强退吗？"), MB_ICONQUESTION|MB_YESNO, 0);
+		if (nRes==IDYES)
+		{
+			AfxGetMainWnd()->PostMessage(WM_COMMAND,IDC_CLOSE);
+		}
+
+		return;
+	}
+	else
+		AfxGetMainWnd()->PostMessage(WM_COMMAND,IDC_CLOSE);
+}
+
 //////////////////////////////////////////////////////////////////////////

@@ -119,6 +119,11 @@ protected:
 	void UpdateScoreControl(LONGLONG lScore[],BOOL bShow);
 	//转换信息
 	void ChangeUserInfo(BYTE bCardData[],BYTE bCardCount,CString &CardInfo);
+	
+	//辅助功能
+public:
+	// 添加小数点
+	CString AddDecimal( LONGLONG lScore ,  bool bComma = true, bool bPlus = false);
 
 	//消息映射
 protected:

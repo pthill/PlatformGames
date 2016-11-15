@@ -16,7 +16,9 @@ public:
 	virtual ~CGameClientApp();
 
 	//继承函数
-public:
+public:	
+	//创建框架
+	virtual CGameFrameWnd * GetGameFrameWnd();
 	//创建引擎
 	virtual CGameFrameEngine * GetGameFrameEngine(DWORD dwSDKVersion);
 };

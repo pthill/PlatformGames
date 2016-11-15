@@ -133,7 +133,8 @@ bool CGameClientEngine::OnInitGameEngine()
 {
 	//设置属性
 	HICON hIcon=LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME));
-	if (m_pIClientKernel!=NULL) m_pIClientKernel->SetGameAttribute(KIND_ID,GAME_PLAYER,VERSION_CLIENT,hIcon,GAME_NAME);
+	if (m_pIClientKernel!=NULL) 
+		m_pIClientKernel->SetGameAttribute(KIND_ID,GAME_PLAYER,VERSION_CLIENT,hIcon,GAME_NAME);
 
 	////定义结构
 	//tagPhraseVoiceInfo pvi = {};
@@ -1310,7 +1311,7 @@ void CGameClientEngine::UpdateScoreControl(LONGLONG lScore[],BOOL bShow)
 		ZeroMemory(tsz,sizeof(tsz));
 		for(BYTE i=0;i<MAX_JETTON_AREA;i++)
 		{
-			_sntprintf(tsz[i],CountArray(tsz[i]),TEXT("%I64d"),lScore[i]);
+			_sntprintf(tsz[i],CountArray(tsz[i]),TEXT("%s"),AddDecimal( lScore[i], false, false ) );
 		}
 		m_GameClientView.m_btOneScore.SetWindowText(tsz[0]);
 		m_GameClientView.m_btTwoScore.SetWindowText(tsz[1]);
@@ -1379,6 +1380,64 @@ void CGameClientEngine::ChangeUserInfo(BYTE bCardData[],BYTE bCardCount,CString 
 	}
 
 	return ;
+}
+
+// 添加小数点
+CString CGameClientEngine::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, bool bPlus /*= false*/)
+{
+	CString strScore;
+	CString strReturn;
+	LONGLONG lNumber = lScore;
+	if ( lScore < 0 )
+		lNumber = -lNumber;
+
+	strScore.Format(TEXT("%I64d"), lNumber);
+
+	//长度
+	int nLength = strScore.GetLength();
+	if (nLength==0) 
+	{
+		strReturn.Insert(0, TEXT("0.00") );
+	}
+	else if (nLength==1) {
+		strReturn.Insert(0, TEXT("0.0") );
+	}
+	if (nLength==2) 
+	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
+		strReturn.Insert(0, TEXT("0.") );
+	}
+	else if(nLength>2)
+	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
+		strReturn.Insert(0, TEXT(".") );
+
+		int nStrCount = 0;
+		for( int i = strScore.GetLength() - 3; i >= 0; )
+		{
+			if( (nStrCount%3)==0 && nStrCount!=0 && bComma)
+			{
+				strReturn.Insert(0, ',');
+				nStrCount = 0;
+			}
+			else
+			{
+				strReturn.Insert(0, strScore.GetAt(i));
+				nStrCount++;
+				i--;
+			}
+		}
+	}
+
+	if ( lScore < 0 )
+		strReturn.Insert(0, '-');
+
+	if ( bPlus && lScore > 0 )
+		strReturn.Insert(0, '+');
+
+	return strReturn;
 }
 
 //提示按钮

@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "GameClient.h"
 #include "GameClientEngine.h"
+#include "GameFrameWindow.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +18,12 @@ CGameClientApp::CGameClientApp()
 //析构函数
 CGameClientApp::~CGameClientApp()
 {
+}
+
+//创建框架
+CGameFrameWnd * CGameClientApp::GetGameFrameWnd()
+{
+	return (CGameFrameWnd *)new CGameFrameWindow();
 }
 
 //创建引擎
