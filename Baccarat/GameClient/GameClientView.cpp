@@ -267,7 +267,7 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_ImageGameFrame[4].LoadImage(hInstance,TEXT("FRAME_RM"));
 	m_ImageGameFrame[5].LoadImage(hInstance,TEXT("FRAME_BL"));
 	m_ImageGameFrame[6].LoadImage(hInstance,TEXT("FRAME_BM"));
-	m_ImageGameFrame[7].LoadImage(hInstance,TEXT("FRAME_BR"));
+	m_ImageGameFrame[7].LoadImage(hInstance,TEXT("FRAME_BR")); 
 
 	m_ImageUserBack.LoadImage(hInstance,TEXT("USER_BACK"));
 	m_ImageChatBack.LoadImage(hInstance,TEXT("CHAT_BACK"));
@@ -411,10 +411,12 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_ChatDisplay.SetReadOnly(TRUE);
 	IClientKernel * m_pIClientKernel;
 	CGlobalUnits * pGlobalUnits=CGlobalUnits::GetInstance();
+
 	//查询接口
 	ASSERT(pGlobalUnits->QueryGlobalModule(MODULE_CLIENT_KERNEL,IID_IClientKernel,VER_IClientKernel)!=NULL);
 	m_pIClientKernel=(IClientKernel *)pGlobalUnits->QueryGlobalModule(MODULE_CLIENT_KERNEL,IID_IClientKernel,VER_IClientKernel);
 	m_pIClientKernel->SetStringMessage(QUERY_OBJECT_INTERFACE(m_ChatDisplay,IStringMessage));
+
 	//控件属性
 	LOGFONT lf;
 	memset(&lf, 0, sizeof(LOGFONT));      
@@ -449,6 +451,8 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_UserList.InsertColumn(nColumnCount++,TEXT(""),LVCFMT_CENTER,35,0);
 	m_UserList.InsertColumn(nColumnCount++,TEXT("昵称"),LVCFMT_LEFT,75);
 	m_UserList.InsertColumn(nColumnCount++,TEXT("财富"),LVCFMT_LEFT,95);
+	m_UserList.InsertColumn(nColumnCount++,TEXT("位置"),LVCFMT_LEFT,110);
+	m_UserList.InsertColumn(nColumnCount++,TEXT("成绩"),LVCFMT_LEFT,130);
 
 	//路单控件
 	if (m_DlgViewChart.m_hWnd == NULL) m_DlgViewChart.Create(IDD_VIEW_CHART,this);

@@ -614,7 +614,7 @@ VOID CGameClientView::RectifyControl(int nWidth, int nHeight)
 	m_btYuYin.GetWindowRect(&rcButton);
 	DeferWindowPos(hDwp,m_btYuYin,NULL,nWidth/2,nHeight-rcButton.Height()-5,0,0,uFlags);
 	
-	//查看路子
+	//主框架
 	DeferWindowPos(hDwp, m_btMin, NULL, nWidth-10-(25*2)-5, 2, 0, 0, uFlags|SWP_NOSIZE);
 	DeferWindowPos(hDwp, m_btClose, NULL, nWidth-10-25, 2, 0, 0, uFlags|SWP_NOSIZE);
 	// DeferWindowPos(hDwp, m_btBank, NULL, 17, nHeight-247, 0, 0, uFlags|SWP_NOSIZE);
@@ -697,21 +697,22 @@ VOID CGameClientView::DrawGameView(CDC * pDC, int nWidth, int nHeight)
 			TCHAR szBuffer[64]=TEXT("");
 
 			//用户名字
-			int nTextWidth = 100;			
+			int nTextWidth = 106;			
 			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%s"),pIClientUserItem->GetNickName());
-			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+18);
-			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), nTextFormat);
+			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y-2,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+18);
+			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo, RGB(255,255,255), nTextFormat);
 
 			//用户金币			
 			LONGLONG lLeaveScore=pIClientUserItem->GetUserScore()-(pIClientUserItem->GetUserStatus()!=US_PLAYING?0:m_lTableScore[i]);
 			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%s"),AddDecimal(lLeaveScore));
 			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+20,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+37);
-			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), DT_CENTER|DT_TOP|DT_NOCLIP);
+			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo, RGB(255,255,255), DT_CENTER|DT_TOP|DT_NOCLIP);
 			
 			//用户IP		
-			_sntprintf(szBuffer,CountArray(szBuffer),TEXT("%s"),pIClientUserItem->GetNickName());
-			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+41,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+46);
-			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo,RGB(255,255,255), nTextFormat);
+			tagUserInfo *pInfo = pIClientUserItem->GetUserInfo();
+			_sntprintf( szBuffer,CountArray(szBuffer),TEXT("%s"),pInfo->szUserAddress );
+			rcUserInfo.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+43,m_ptNickName[i].x+nTextWidth,m_ptNickName[i].y+46);
+			CDFontEx::DrawText(this,pDC,  12, 400, szBuffer, rcUserInfo, RGB(255,255,255), nTextFormat);
 
 			//其他信息
 			if (wUserTimer!=0)

@@ -1002,11 +1002,12 @@ VOID CGameClientView::DrawGameView(CD3DDevice * pD3DDevice, INT nWidth, INT nHei
 
 
 		//位置定义
-		CRect rcNickName,rcUserScore,rcUserLevel;
+		CRect rcNickName,rcUserScore,rcAddress, rcUserLevel;
 		if(i == MYSELF_VIEW_ID)
 		{
 			rcNickName.SetRect(m_ptNickName[i].x,m_ptNickName[i].y,m_ptNickName[i].x+72,m_ptNickName[i].y+12);
 			rcUserScore.SetRect(m_ptNickName[i].x+120,m_ptNickName[i].y,m_ptNickName[i].x+195,m_ptNickName[i].y+29);
+			rcAddress.SetRect(m_ptNickName[i].x+240,m_ptNickName[i].y,m_ptNickName[i].x+390,m_ptNickName[i].y+58);
 		}
 		else		//叫分结束
 		{
@@ -1014,11 +1015,13 @@ VOID CGameClientView::DrawGameView(CD3DDevice * pD3DDevice, INT nWidth, INT nHei
 			{
 				rcNickName.SetRect(m_ptNickName[i].x,m_ptNickName[i].y,m_ptNickName[i].x+75,m_ptNickName[i].y+12);
 				rcUserScore.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+20+3+2,m_ptNickName[i].x+75,m_ptNickName[i].y+32+3+2);
+				rcAddress.SetRect(m_ptNickName[i].x,m_ptNickName[i].y+40+3+2,m_ptNickName[i].x+75,m_ptNickName[i].y+52+3+2);
 			}
 			else
 			{
 				rcNickName.SetRect(m_ptNickName[i].x+10-((i==2)?0:70),m_ptNickName[i].y+86,m_ptNickName[i].x+85-((i==2)?0:70),m_ptNickName[i].y+97);
 				rcUserScore.SetRect(m_ptNickName[i].x+10-((i==2)?0:70),m_ptNickName[i].y+105,m_ptNickName[i].x+85-((i==2)?0:70),m_ptNickName[i].y+117);
+				rcAddress.SetRect(m_ptNickName[i].x+10-((i==2)?0:70),m_ptNickName[i].y+124,m_ptNickName[i].x+85-((i==2)?0:70),m_ptNickName[i].y+137);
 			}
 
 		}
@@ -1046,6 +1049,15 @@ VOID CGameClientView::DrawGameView(CD3DDevice * pD3DDevice, INT nWidth, INT nHei
 					SizeBankerFlag.cx*((i==m_wBankerUser)?0:1),0);
 			}
 
+		}
+
+		//用户地址
+		if(i != MYSELF_VIEW_ID)
+		{
+			TCHAR szAddress[64]=TEXT("");
+			tagUserInfo * pUserInfo = pIClientUserItem->GetUserInfo();
+			_sntprintf( szAddress, CountArray(szAddress), TEXT("%s"), pUserInfo->szUserAddress );
+			DrawTextString(pD3DDevice, szAddress, rcAddress, DT_CENTER|DT_END_ELLIPSIS,D3DCOLOR_XRGB(255,255,0),D3DCOLOR_XRGB(0,50,0));
 		}
 
 		//托管标记
@@ -1115,15 +1127,18 @@ VOID CGameClientView::DrawGameView(CD3DDevice * pD3DDevice, INT nWidth, INT nHei
 			}
 		}
 	}
+
 	//聊天记录背景
 	if(m_bShowChatMessage)
 		m_TextureChatBack.DrawImage(pD3DDevice,nWidth-268,nHeight-178);
+
 	//游戏结算
 	if(m_bGameEnd == true)
 	{
 		//结束背景
 		DrawViewImage(pD3DDevice,m_TextureGameScoreBack,DRAW_MODE_SPREAD);
 	}
+
 	//用户标志
 	for (WORD i=0;i<GAME_PLAYER;i++)
 	{
@@ -1380,19 +1395,14 @@ VOID CGameClientView::DrawGameView(CD3DDevice * pD3DDevice, INT nWidth, INT nHei
 			{
 				SizeCountWarn[j].SetSize(m_TextureWarn[j].GetWidth(),m_TextureWarn[j].GetHeight());
 			}
-			m_TextureWarn[0].DrawImage(pD3DDevice,m_ptCountWarn[i].x,m_ptCountWarn[i].y,SizeCountWarn[0].cx,SizeCountWarn[0].cy,
-				0,0);
-			m_TextureWarn[1].DrawImage(pD3DDevice,m_ptCountWarn[i].x-43,m_ptCountWarn[i].y,SizeCountWarn[1].cx,SizeCountWarn[1].cy,
-				0,0);
-			m_TextureWarn[2].DrawImage(pD3DDevice,m_ptCountWarn[i].x+43,m_ptCountWarn[i].y,SizeCountWarn[2].cx,SizeCountWarn[2].cy,
-				0,0);
+			m_TextureWarn[0].DrawImage(pD3DDevice,m_ptCountWarn[i].x,m_ptCountWarn[i].y,SizeCountWarn[0].cx,SizeCountWarn[0].cy, 0,0);
+			m_TextureWarn[1].DrawImage(pD3DDevice,m_ptCountWarn[i].x-43,m_ptCountWarn[i].y,SizeCountWarn[1].cx,SizeCountWarn[1].cy, 0,0);
+			m_TextureWarn[2].DrawImage(pD3DDevice,m_ptCountWarn[i].x+43,m_ptCountWarn[i].y,SizeCountWarn[2].cx,SizeCountWarn[2].cy, 0,0);
 
 			if(m_wCountWarnIndex[i] == 0)
 			{
-				m_TextureWarn[3].DrawImage(pD3DDevice,m_ptCountWarn[i].x-19,m_ptCountWarn[i].y-17,SizeCountWarn[3].cx,SizeCountWarn[3].cy,
-					0,0);
-				m_TextureWarn[4].DrawImage(pD3DDevice,m_ptCountWarn[i].x+23,m_ptCountWarn[i].y+60-56+10,SizeCountWarn[4].cx,SizeCountWarn[4].cy,
-					0,0);
+				m_TextureWarn[3].DrawImage(pD3DDevice,m_ptCountWarn[i].x-19,m_ptCountWarn[i].y-17,SizeCountWarn[3].cx,SizeCountWarn[3].cy, 0,0);
+				m_TextureWarn[4].DrawImage(pD3DDevice,m_ptCountWarn[i].x+23,m_ptCountWarn[i].y+60-56+10,SizeCountWarn[4].cx,SizeCountWarn[4].cy, 0,0);
 			}
 		}
 		

@@ -507,6 +507,7 @@ void CGameClientEngine::UpdateUserList()
 		sUserInfo userInfo;
 
 		userInfo.strUserName=pClientUserItem->GetNickName();
+		userInfo.strAddress=pUserInfo->szUserAddress;
 		userInfo.lUserScore=pClientUserItem->GetUserScore();
 		userInfo.lWinScore=0;
 		userInfo.wImageIndex=uImageIndex;

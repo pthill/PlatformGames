@@ -313,9 +313,13 @@ void CSkinListCtrlEx::InserUser(sUserInfo & UserInfo)
 	myprintf(szBuffer,CountArray(szBuffer),TEXT("%s"), AddComma(UserInfo.lUserScore) );
 	SetItem(nItemIndex,wColumnCount++,LVIF_TEXT,szBuffer,0,0,0,0);
 	
+	//玩家地址
+	myprintf(szBuffer,CountArray(szBuffer),TEXT("%s"), UserInfo.szUserAddress );
+	SetItem(nItemIndex,wColumnCount++,LVIF_TEXT,szBuffer,0,0,0,0);
+
 	//总输赢成绩
-	myprintf(szBuffer,CountArray(szBuffer),TEXT("%s"), AddComma(UserInfo.lWinScore) );
-	SetItem(nItemIndex,wColumnCount++,LVIF_TEXT,szBuffer,0,0,0,0);	
+	//myprintf(szBuffer,CountArray(szBuffer),TEXT("%s"), AddComma(UserInfo.lWinScore) );
+	//SetItem(nItemIndex,wColumnCount++,LVIF_TEXT,szBuffer,0,0,0,0);	
 	
 	//图片 机器人标识
 	DWORD dwItemData = MAKELONG(UserInfo.wAndrod, UserInfo.wImageIndex);
@@ -400,7 +404,7 @@ void CSkinListCtrlEx::UpdateUser( sUserInfo & UserInfo )
 
 		//总输赢
 		myprintf(szBuffer,CountArray(szBuffer),TEXT("%s"), AddComma(UserInfo.lWinScore) );
-		SetItem(nItem,3,LVIF_TEXT,szBuffer,0,0,0,0);
+		SetItem(nItem,4,LVIF_TEXT,szBuffer,0,0,0,0);
 
 		Invalidate(FALSE);
 	}

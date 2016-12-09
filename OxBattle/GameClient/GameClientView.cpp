@@ -1260,6 +1260,7 @@ int CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_UserList.InsertColumn(nColumnCount++,TEXT(""),LVCFMT_CENTER,35,0);
 	m_UserList.InsertColumn(nColumnCount++,TEXT("昵称"),LVCFMT_LEFT,75);
 	m_UserList.InsertColumn(nColumnCount++,TEXT("财富"),LVCFMT_LEFT,95);
+	m_UserList.InsertColumn(nColumnCount++,TEXT("位置"),LVCFMT_LEFT,115);
 
 	//扑克控件
 	for (int i=0; i<CountArray(m_CardControl); ++i) m_CardControl[i].SetDisplayFlag(true);	

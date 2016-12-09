@@ -248,6 +248,11 @@ private:
 	LONGLONG CalculateScore();
 	//推断赢家
 	void DeduceWinner(bool &bWinTian, bool &bWinDi, bool &bWinXuan,bool &bWinHuan,BYTE &TianMultiple,BYTE &diMultiple,BYTE &TianXuanltiple,BYTE &HuangMultiple );
+
+	//辅助功能
+public:
+	// 添加小数点
+	CString AddDecimal( LONGLONG lScore ,  bool bComma = true, bool bPlus = false);
 };
 
 

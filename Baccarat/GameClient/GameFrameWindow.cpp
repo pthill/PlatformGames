@@ -404,7 +404,6 @@ void CGameFrameWindow::ReSetDlgSize(int cx,int cy)
 	rcNormalSize.right=rcNormalSize.left+SizeRestrict.cx;
 	rcNormalSize.bottom=rcNormalSize.top+SizeRestrict.cy;
 
-
 	m_CurWindowSize.SetSize(rcNormalSize.Width(),rcNormalSize.Height());
 
 

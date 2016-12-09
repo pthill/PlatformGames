@@ -598,8 +598,8 @@ bool CTableFrameSink::OnEventSendGameScene(WORD wChairID, IServerUserItem * pISe
 
 			//限制提示
 			TCHAR szTipMsg[128];
-			_sntprintf(szTipMsg,CountArray(szTipMsg),TEXT("本房间上庄条件为：%I64d,区域限制为：%I64d,玩家限制为：%I64d"),m_lApplyBankerCondition,
-				m_lAreaLimitScore,m_lUserLimitScore);
+			_sntprintf( szTipMsg, CountArray(szTipMsg), TEXT("本房间上庄条件为：%s,区域限制为：%s,玩家限制为：%s"),
+				AddDecimal(m_lApplyBankerCondition), AddDecimal(m_lAreaLimitScore), AddDecimal(m_lUserLimitScore) );
 
 			m_pITableFrame->SendGameMessage(pIServerUserItem,szTipMsg,SMT_CHAT);
 
@@ -2345,4 +2345,65 @@ void CTableFrameSink::WriteInfo( LPCTSTR pszFileName, LPCTSTR pszString )
 	setlocale( LC_CTYPE, old_locale );
 	free( old_locale );
 }
+
+
 //////////////////////////////////////////////////////////////////////////////////
+
+// 添加小数点
+CString CTableFrameSink::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, bool bPlus /*= false*/)
+{
+	CString strScore;
+	CString strReturn;
+	LONGLONG lNumber = lScore;
+	if ( lScore < 0 )
+		lNumber = -lNumber;
+
+	strScore.Format(TEXT("%I64d"), lNumber);
+
+	//长度
+	int nLength = strScore.GetLength();
+	if (nLength==0) 
+	{
+		strReturn.Insert(0, TEXT("0.00") );
+	}
+	else if (nLength==1) {
+		strReturn.Insert(0, TEXT("0.0") );
+	}
+	if (nLength==2) 
+	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
+		strReturn.Insert(0, TEXT("0.") );
+	}
+	else if(nLength>2)
+	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
+		strReturn.Insert(0, TEXT(".") );
+
+		int nStrCount = 0;
+		for( int i = strScore.GetLength() - 3; i >= 0; )
+		{
+			if( (nStrCount%3)==0 && nStrCount!=0 && bComma)
+			{
+				strReturn.Insert(0, ',');
+				nStrCount = 0;
+			}
+			else
+			{
+				strReturn.Insert(0, strScore.GetAt(i));
+				nStrCount++;
+				i--;
+			}
+		}
+	}
+
+	if ( lScore < 0 )
+		strReturn.Insert(0, '-');
+
+	if ( bPlus && lScore > 0 )
+		strReturn.Insert(0, '+');
+
+	return strReturn;
+}
+

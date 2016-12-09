@@ -27,7 +27,7 @@
 #define CARD_EXCURSION_Y				177								//扑克偏移
 
 //发牌定义
-#define SEND_STEP_COUNT					8								//步数
+#define SEND_STEP_COUNT					5								//步数
 #define SPEED_SEND_CARD					10								//发牌速度
 
 //筹码定义
@@ -331,6 +331,8 @@ CString CGameClientView::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, 
 	}
 	if (nLength==2) 
 	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
 		strReturn.Insert(0, TEXT("0.") );
 	}
 	else if(nLength>2)
@@ -369,18 +371,18 @@ CString CGameClientView::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, 
 VOID CGameClientView::RectifyControl(INT nWidth, INT nHeight)
 {
 	//准备位置
-	m_ptReady[0].SetPoint(nWidth/2 - 192, nHeight-369 - 20-15);
-	m_ptReady[1].SetPoint(nWidth/2 - 347, nHeight-369 + 130-15);
-	m_ptReady[2].SetPoint(nWidth/2 - 310, nHeight-369 + 330-15);
-	m_ptReady[3].SetPoint(nWidth/2 + 350, nHeight-369 + 160-15);
-	m_ptReady[4].SetPoint(nWidth/2 + 255, nHeight-369 - 7-15);
+	m_ptReady[0].SetPoint(nWidth/2 - 192, nHeight-369 - 30);
+	m_ptReady[1].SetPoint(nWidth/2 - 327, nHeight-369 + 150);
+	m_ptReady[2].SetPoint(nWidth/2 - 310, nHeight-369 + 330-35);
+	m_ptReady[3].SetPoint(nWidth/2 + 330, nHeight-369 + 160-35);
+	m_ptReady[4].SetPoint(nWidth/2 + 235, nHeight-369 - 12-15);
 
 	// 头像
-	m_ptUserInfo[0].SetPoint(320, nHeight - 458);
+	m_ptUserInfo[0].SetPoint(320, nHeight - 478);
 	m_ptUserInfo[1].SetPoint(80, 509-30);
 	m_ptUserInfo[2].SetPoint(90, nHeight-170);
 	m_ptUserInfo[3].SetPoint(nWidth/2 + 435, nHeight-369 + 154-15);
-	m_ptUserInfo[4].SetPoint(nWidth/2 + 256, nHeight-369 - 60-15);
+	m_ptUserInfo[4].SetPoint(nWidth/2 + 256, nHeight-369 - 80-15);
 
 	//时间位置
 	m_ptClock[0].SetPoint(nWidth/2 - 355, nHeight-369 - 252-15);
@@ -396,19 +398,18 @@ VOID CGameClientView::RectifyControl(INT nWidth, INT nHeight)
 	m_ptUserAction[3].SetPoint(nWidth/2 + 375, nHeight-369 - 45-15);
 	m_ptUserAction[4].SetPoint(nWidth/2 + 170, nHeight-369 - 235-15);
 
-	
 	//扑克控件
-	m_CardControl[0].SetBenchmarkPos(nWidth/2 - 190, nHeight-369 - 43-15,	enXCenter,enYTop);
-	m_CardControl[1].SetBenchmarkPos(nWidth/2 - 383, nHeight-369 + 110-15,	enXLeft,enYCenter);
+	m_CardControl[0].SetBenchmarkPos(nWidth/2 - 190, nHeight-369 - 43-15,		enXCenter,enYTop);
+	m_CardControl[1].SetBenchmarkPos(nWidth/2 - 353, nHeight-369 + 110-15,		enXLeft,enYCenter);
 	m_CardControl[2].SetBenchmarkPos(nWidth/2,		 nHeight-369 + 288 + 8-15,	enXCenter,enYBottom);
-	m_CardControl[3].SetBenchmarkPos(nWidth/2 + 385, nHeight-369 + 140-15,	enXRight,enYCenter);
-	m_CardControl[4].SetBenchmarkPos(nWidth/2 + 220, nHeight-369 - 30-15,	enXCenter,enYTop);
+	m_CardControl[3].SetBenchmarkPos(nWidth/2 + 355, nHeight-369 + 140-15,		enXRight,enYCenter);
+	m_CardControl[4].SetBenchmarkPos(nWidth/2 + 220, nHeight-369 - 30-15,		enXCenter,enYTop);
 
 	//玩家筹码
 	m_ptPalyBetChip[0].SetPoint(nWidth/2 - 122, nHeight-369 - 125-15);
-	m_ptPalyBetChip[1].SetPoint(nWidth/2 - 120,	nHeight-369 + 30-15);
+	m_ptPalyBetChip[1].SetPoint(nWidth/2 - 100,	nHeight-369 + 30-15);
 	m_ptPalyBetChip[2].SetPoint(nWidth/2,		nHeight-369 + 45 + 18-15);
-	m_ptPalyBetChip[3].SetPoint(nWidth/2 + 120,	nHeight-369 + 30-15);
+	m_ptPalyBetChip[3].SetPoint(nWidth/2 + 100,	nHeight-369 + 30-15);
 	m_ptPalyBetChip[4].SetPoint(nWidth/2 + 122, nHeight-369 - 125-15);
 
 	// 结束积分
@@ -425,8 +426,8 @@ VOID CGameClientView::RectifyControl(INT nWidth, INT nHeight)
 	m_ptUser[3].SetPoint(nWidth/2 + 364, nHeight-369 - 48-15);
 	m_ptUser[4].SetPoint(nWidth/2 + 185, nHeight-369 - 275-15);
 
-	m_ptAvatar[0].SetPoint(250, nHeight-518);
-	m_ptAvatar[1].SetPoint(70, nHeight-282);
+	m_ptAvatar[0].SetPoint(250, nHeight-528);
+	m_ptAvatar[1].SetPoint(70, nHeight-292);
 	m_ptAvatar[2].SetPoint(200, nHeight-43);
 	m_ptAvatar[3].SetPoint(nWidth/2 + 464, nHeight-369 + 108-15);
 	m_ptAvatar[4].SetPoint(nWidth/2 + 285, nHeight-369 - 135-15);
@@ -565,6 +566,11 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 			//用户积分
 			rectInfo.OffsetRect( 0, 22 );
 			DrawTextStringEx(pDC,AddDecimal(m_lUserScore[i]),RGB(255,255,0),RGB(0,0,0),rectInfo, DT_WORDBREAK|DT_EDITCONTROL|DT_END_ELLIPSIS|DT_SINGLELINE|DT_CENTER);
+
+			//用户IP地址
+			rectInfo.OffsetRect( 0, 22 );
+			tagUserInfo * pUserInfo = pIClientUserItem->GetUserInfo();
+			DrawTextStringEx(pDC, pUserInfo->szUserAddress, RGB(255,255,0),RGB(0,0,0), rectInfo, DT_WORDBREAK|DT_EDITCONTROL|DT_END_ELLIPSIS|DT_SINGLELINE|DT_CENTER);
 
 		}
 		else
@@ -1726,8 +1732,8 @@ INT CGameClientView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	UpdateSound();
 
 	// 开启筹码移动
-	SetTimer(IDI_MOVE_CHIP, 40, NULL);
-	SetTimer(IDI_MOVE_EYE, 333, NULL);
+	SetTimer(IDI_MOVE_CHIP, 10, NULL);
+	SetTimer(IDI_MOVE_EYE,  20, NULL);
 
 	return 0;
 }
@@ -1880,7 +1886,7 @@ void CGameClientView::AddDeskChip( LONGLONG lScore, WORD wChairID )
 				DPOINT	ptEndPos;
 
 				wChipIndex = m_ArrayPlayChip[nIndex]->wChipIndex;
-				nAllTime = 8;
+				nAllTime = 5;
 				CPoint ptBenchmarkPos = m_ptPalyBetChip[wChairID];
 				ptBeginPos.SetPoint( m_ArrayPlayChip[nIndex]->ptCurrentPos.x, m_ArrayPlayChip[nIndex]->ptCurrentPos.y);
 				ptEndPos.SetPoint( m_rectBetChip.left + rand()%m_rectBetChip.Width(), m_rectBetChip.top + rand()%m_rectBetChip.Height());

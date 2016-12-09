@@ -16,6 +16,7 @@ struct sUserInfo
 {
 	//玩家信息
 	CString							strUserName;						//玩家帐号
+	CString                         szUserAddress;						//玩家地址
 	LONGLONG						lUserScore;							//玩家金币
 	LONGLONG						lWinScore;							//输赢金币
 	WORD							wImageIndex;						//位图索引

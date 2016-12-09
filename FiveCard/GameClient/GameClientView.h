@@ -37,7 +37,7 @@
 //通知消息
 #define IDM_SEND_CARD_FINISH		(WM_USER+300)						//发牌完成
 
-#define IDM_CHAT_MESSAGE			WM_USER+2208							//聊天消息
+#define IDM_CHAT_MESSAGE			WM_USER+2208						//聊天消息
 
 //////////////////////////////////////////////////////////////////////////
 //结构定义

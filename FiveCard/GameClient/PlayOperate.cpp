@@ -579,6 +579,8 @@ CString CPlayOperate::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, boo
 	}
 	if (nLength==2) 
 	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
 		strReturn.Insert(0, TEXT("0.") );
 	}
 	else if(nLength>2)

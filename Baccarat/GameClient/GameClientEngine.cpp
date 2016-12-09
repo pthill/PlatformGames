@@ -1139,6 +1139,7 @@ void CGameClientEngine::UpdateUserList()
 		}
 
 		tagUserInfo * pUserInfo=pClientUserItem->GetUserInfo();
+
 		//Í¼±êË÷Òý
 		UINT uImageIndex=INDEX_NORMAL;
 
@@ -1154,6 +1155,7 @@ void CGameClientEngine::UpdateUserList()
 
 		userInfo.strUserName=pClientUserItem->GetNickName();
 		userInfo.lUserScore=pClientUserItem->GetUserScore();
+		userInfo.szUserAddress=pUserInfo->szUserAddress;
 		userInfo.lWinScore=0;
 		userInfo.wImageIndex=uImageIndex;
 

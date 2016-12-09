@@ -100,11 +100,11 @@ protected:
 	//加庄局数设置：当庄家坐满设定的局数之后(m_nBankerTimeLimit)，
 	//所带金币值还超过下面申请庄家列表里面所有玩家金币时，
 	//可以再加坐庄m_nBankerTimeAdd局，加庄局数可设置。
-	LONGLONG						m_nBankerTimeLimit;							//最大庄家数
-	LONGLONG						m_nBankerTimeAdd;							//庄家增加数
+	LONGLONG						m_nBankerTimeLimit;						//最大庄家数
+	LONGLONG						m_nBankerTimeAdd;						//庄家增加数
 
 	//金币超过m_lExtraBankerScore之后，就算是下面玩家的金币值大于他的金币值，他也可以再加庄m_nExtraBankerTime局。
-	LONGLONG						m_lExtraBankerScore;						//庄家钱
+	LONGLONG						m_lExtraBankerScore;					//庄家钱
 	LONGLONG						m_nExtraBankerTime;						//庄家钱大时,坐庄增加数
 
 	//最大庄家数
@@ -244,6 +244,8 @@ private:
 	void ReadConfigInformation();
 	// 添加逗号
 	CString AddComma( LONGLONG lScore );
+	// 添加小数
+	CString AddDecimal( LONGLONG lScore , bool bPlus = false);
 	//是否衰减
 	bool NeedDeductStorage();
 	//发送下注信息

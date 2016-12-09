@@ -314,7 +314,11 @@ void CSkinListCtrlEx::InserUser(sUserInfo & UserInfo)
 	myprintf(szBuffer,CountArray(szBuffer),TEXT("%.2lf"), dUserScore/100);
 	//myprintf(szBuffer,CountArray(szBuffer),TEXT("%I64d"),UserInfo.lUserScore);
 	SetItem(nItemIndex,wColumnCount++,LVIF_TEXT,szBuffer,0,0,0,0);
-	
+
+	//总输赢成绩
+	myprintf(szBuffer,CountArray(szBuffer),TEXT("%s"), UserInfo.strAddress);
+	SetItem(nItemIndex,wColumnCount++,LVIF_TEXT,szBuffer,0,0,0,0);	
+
 	//总输赢成绩
 	double dWinScore = (double) UserInfo.lUserScore;
 	myprintf(szBuffer,CountArray(szBuffer),TEXT("%.2lf"), dWinScore/100);
@@ -381,7 +385,6 @@ void CSkinListCtrlEx::UpdateUser( sUserInfo & UserInfo )
 	//查找子项
 	int nItem = -1;
 
-
 	for(int i=0;i<GetItemCount();i++)
 	{
 		CString strName=GetItemText(i,1);
@@ -401,14 +404,12 @@ void CSkinListCtrlEx::UpdateUser( sUserInfo & UserInfo )
 		//玩家金币
 		double dUserScore = (double) UserInfo.lUserScore;
 		myprintf(szBuffer,CountArray(szBuffer),TEXT("%.2lf"), dUserScore/100);
-		//myprintf(szBuffer,CountArray(szBuffer),TEXT("%I64d"),UserInfo.lUserScore);
 		SetItem(nItem,2,LVIF_TEXT,szBuffer,0,0,0,0);
 
 		//总输赢
 		double dWinScore = (double) UserInfo.lUserScore;
 		myprintf(szBuffer,CountArray(szBuffer),TEXT("%.2lf"), dWinScore/100);
-		//myprintf(szBuffer,CountArray(szBuffer),TEXT("%I64d"),UserInfo.lWinScore);
-		SetItem(nItem,3,LVIF_TEXT,szBuffer,0,0,0,0);
+		SetItem(nItem,4,LVIF_TEXT,szBuffer,0,0,0,0);
 
 		Invalidate(FALSE);
 	}

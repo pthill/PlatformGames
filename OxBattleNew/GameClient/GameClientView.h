@@ -247,7 +247,7 @@ private:
 	//绘画界面
 	virtual VOID DrawGameView(CDC * pDC, int nWidth, int nHeight);
 	//绘画框架
-	void DrawGameFrame(CDC *pDC, int nWidth, int nHeight);
+	virtual void DrawGameFrame(CDC *pDC, int nWidth, int nHeight);
 
 	//辅助功能
 public:

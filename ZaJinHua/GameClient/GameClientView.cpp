@@ -30,7 +30,7 @@
 #define IDC_CHAT_DISPLAY				124								//控件标识
 #define IDC_HISTORY_CHAT				125								//控件标识
 #define IDC_OPTION						126								//控件标识
-#define IDC_ADMIN						127									//按钮标识
+#define IDC_ADMIN						127								//按钮标识
 
 //定时器标识
 #define IDI_CARTOON						99								//动画定时器
@@ -41,10 +41,10 @@
 #define IDI_OPEN_EYE					120								//睁眼定时
 
 //动画速度  //(SPEED)10 (TIME_CARTOON)70 /CPU UP
-#define	SPEED							7								//减慢速度参数
+#define	SPEED							5								//减慢速度参数
 #define	ROCK							10								//振动副度
-#define TIME_MOVE_JETTON				20								//移动筹码时间
-#define TIME_MOVE_NUMBER				50								//滚动数字时间
+#define TIME_MOVE_JETTON				10								//移动筹码时间
+#define TIME_MOVE_NUMBER				20								//滚动数字时间
 
 //位置变量
 #define	MY_SELF_CHAIRID					2								//自己位置
@@ -715,14 +715,14 @@ VOID CGameClientView::RectifyControl(INT nWidth, INT nHeight)
 	m_ptUserCard[0].y=m_CardControl[0].GetCardPos().y;
 
 	//玩家框架位置
-	m_ptPlayerFrame[0].x = nWidth/2-372;
-	m_ptPlayerFrame[0].y = nHeight/2-78-15;
+	m_ptPlayerFrame[0].x = nWidth/2-392;
+	m_ptPlayerFrame[0].y = nHeight/2-78-30;
 	m_ptPlayerFrame[1].x = nWidth/2-497;
 	m_ptPlayerFrame[1].y = nHeight/2+134-15;
 	m_ptPlayerFrame[2].x = 0;
 	m_ptPlayerFrame[2].y = 0;
 	m_ptPlayerFrame[3].x = nWidth/2+390;
-	m_ptPlayerFrame[3].y = nHeight/2+134-15;
+	m_ptPlayerFrame[3].y = nHeight/2+124-15;
 	m_ptPlayerFrame[4].x = nWidth/2+309;
 	m_ptPlayerFrame[4].y = nHeight/2-78-15;
 
@@ -898,6 +898,14 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 				else
 				{
 					DrawTextString(pDC,szBuffer,RGB(162,255,0),RGB(0,0,0),m_ptPlayerFrame[i].x+5,m_ptPlayerFrame[i].y+32,DT_CENTER|DT_END_ELLIPSIS);
+				}
+
+				//用户地址
+				if(i!=MY_SELF_CHAIRID)
+				{
+					tagUserInfo * pUserInfo = pClientUserItem->GetUserInfo();
+					pDC->SetTextColor((i>0)?RGB(250,250,250):RGB(220,220,220));					
+					DrawTextString(pDC, pUserInfo->szUserAddress, RGB(255,253,0), RGB(0,0,0), m_ptPlayerFrame[i].x+5, m_ptPlayerFrame[i].y+52, DT_CENTER|DT_END_ELLIPSIS);
 				}
 
 				//其他信息

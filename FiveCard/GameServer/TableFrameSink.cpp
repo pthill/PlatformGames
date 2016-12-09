@@ -266,14 +266,17 @@ bool CTableFrameSink::OnEventGameStart()
 
 
 	//底注积分
-	if (lUserLessScore > 100L * m_pGameServiceOption->lCellScore)
+	m_lDrawCellScore=m_pGameServiceOption->lCellScore;
+
+	/* if (lUserLessScore > 100L * m_pGameServiceOption->lCellScore)
 	{
 		m_lDrawCellScore = lUserLessScore * 6.6 / 100L;
 	}
 	else
 	{
 		m_lDrawCellScore=m_pGameServiceOption->lCellScore;
-	}
+	}*/
+
 
 	//服务费
 	m_lServiceCharge = 0;
@@ -1502,6 +1505,8 @@ CString CTableFrameSink::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, 
 	}
 	if (nLength==2) 
 	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-2) );
 		strReturn.Insert(0, TEXT("0.") );
 	}
 	else if(nLength>2)
