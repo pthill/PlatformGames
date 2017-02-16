@@ -861,7 +861,8 @@ bool CGameClientEngine::OnSubGameStart(const void * pBuffer, WORD wDataSize)
 	CMD_S_GameStart * pGameStart=(CMD_S_GameStart *)pBuffer;
 
 	//旁观界面
-	if(IsLookonMode())OnStart(0,0);
+	if( IsLookonMode() )
+		OnStart(0,0);
 
 	////停止动画
 	m_GameClientView.StopMoveJettons();
@@ -936,12 +937,14 @@ bool CGameClientEngine::OnSubGameStart(const void * pBuffer, WORD wDataSize)
 		lstrcpyn(m_szAccounts[i],pClientUserItem->GetNickName(),CountArray(m_szAccounts[i]));
 		m_strAccounts[i] = pClientUserItem->GetNickName();
 	}
+
 	//m_GameClientView.BeginMoveJettons();
 	m_GameClientView.StopMoveJettons();
 
 	//界面设置
 	m_GameClientView.SetBankerUser(m_wViewChairID[m_wBankerUser]);
-//	AfxMessageBox(TEXT("..."),0,0);
+
+	//AfxMessageBox(TEXT("..."),0,0);
 	m_GameClientView.SetScoreInfo(m_lMaxCellScore,m_lCellScore);
 
 	//派发扑克
@@ -1061,7 +1064,8 @@ bool CGameClientEngine::OnSubAddScore(const void * pBuffer, WORD wDataSize)
 
 	//设置时间
 	if(pAddScore->wCompareState==FALSE)
-	{//if(IsLookonMode() || wMeChairID!=m_wCurrentUser)
+	{	
+		//if(IsLookonMode() || wMeChairID!=m_wCurrentUser)
 		SetGameClock(m_wCurrentUser,IDI_USER_ADD_SCORE,TIME_USER_ADD_SCORE);
 	}
 
@@ -1478,13 +1482,14 @@ void CGameClientEngine::ScoreControl(BOOL bShow)
 void CGameClientEngine::AddScoreControl(BOOL bShow)
 {
 	return;
-	//if(bShow)
-	/*m_GameClientView.m_btMinScore.ShowWindow(bShow);
-	m_GameClientView.m_btMaxScore.ShowWindow(bShow);
-	m_GameClientView.m_btCancel.ShowWindow(bShow);
-	m_GameClientView.m_btConfirm.ShowWindow(bShow);*/
+
+	/* if(bShow) {
+		m_GameClientView.m_btJetton_1.ShowWindow(bShow);
+		m_GameClientView.m_btJetton_3.ShowWindow(bShow);
+		m_GameClientView.m_btJetton_5.ShowWindow(bShow);
+	} */
+
 //	m_GameClientView.m_GoldControl.ShowWindow(false);
-	
 //	m_GameClientView.m_GoldControl.m_bMingTag=m_bMingZhu[GetMeChairID()];
 
 	m_GameClientView.RefreshGameView();
@@ -1503,7 +1508,6 @@ void CGameClientEngine::UpdataControl()
 	m_GameClientView.m_btGiveUp.EnableWindow(TRUE);
 
 	
-
 	//看牌按钮
 	m_GameClientView.m_btLookCard.EnableWindow((m_bMingZhu[wMeChairID])?FALSE:TRUE);
 
@@ -1542,11 +1546,9 @@ void CGameClientEngine::UpdataControl()
 		}
 		else
 		{
-			
 			m_GameClientView.m_btJetton_1.EnableWindow(FALSE);
 			m_GameClientView.m_btJetton_3.EnableWindow(FALSE);
 			m_GameClientView.m_btJetton_5.EnableWindow(FALSE);
-
 		}
 
 		//比牌按钮
@@ -1566,9 +1568,9 @@ void CGameClientEngine::UpdataControl()
 		m_GameClientView.m_btJetton_3.ShowWindow(SW_SHOW);
 		m_GameClientView.m_btJetton_5.ShowWindow(SW_SHOW);
 
-		m_GameClientView.m_btJetton_1.EnableWindow(FALSE);
-		m_GameClientView.m_btJetton_3.EnableWindow(FALSE);
-		m_GameClientView.m_btJetton_5.EnableWindow(FALSE);
+		//m_GameClientView.m_btJetton_1.EnableWindow(FALSE);
+		//m_GameClientView.m_btJetton_3.EnableWindow(FALSE);
+		//m_GameClientView.m_btJetton_5.EnableWindow(FALSE);
 		
 		m_GameClientView.m_btFollow.EnableWindow(FALSE);
 	//	m_GameClientView.m_btAddScore.EnableWindow(FALSE);
@@ -1636,7 +1638,7 @@ LRESULT	CGameClientEngine::OnAddScore(WPARAM wParam, LPARAM lParam)
 	ASSERT(m_lCellScore>0L);
 
 	//判断加注值
-	LONGLONG lAddScore;
+	LONGLONG lAddScore = 0L;
 	BYTE cbTemp= (BYTE)wParam;
 	if(cbTemp == 0) lAddScore = m_lCellScore;
 	if(cbTemp == 1) lAddScore = m_lCellScore*3;
@@ -1649,8 +1651,8 @@ LRESULT	CGameClientEngine::OnAddScore(WPARAM wParam, LPARAM lParam)
 //	m_GameClientView.m_GoldControl.SetMinGold(m_lCellScore*m_lCurrentTimes);
 //	m_GameClientView.m_GoldControl.SetGold(m_lCellScore*m_lCurrentTimes);
 
-	AddScoreControl(SW_SHOW);
-	ScoreControl(SW_HIDE);
+	//AddScoreControl(SW_SHOW);
+	//ScoreControl(SW_HIDE);
 
 	return 0;
 }
@@ -1690,16 +1692,14 @@ LRESULT CGameClientEngine::OnConfirmScore(WPARAM wParam, LPARAM lParam)
 	LONGLONG lScore = (LONGLONG)lParam;
 
 	//效验数据
-	ASSERT(wTemp==1 || lScore+m_lCellScore*m_lCurrentTimes >= (m_lCellScore*m_lCurrentTimes)
+	ASSERT(wTemp==1 || lScore+m_lCellScore*m_lCurrentTimes >= (m_lCellScore*m_lCurrentTimes) 
 		&& lScore+m_lCellScore*m_lCurrentTimes <= m_lMaxCellScore);
 
 	//删除时间
 	KillGameClock(IDI_USER_ADD_SCORE);
 
 	//获取筹码
-//	LONGLONG lCurrentScore = (wTemp==0) ?(m_GameClientView.m_GoldControl.GetGold()) : (m_lCellScore*m_lCurrentTimes);
-
-	
+	//LONGLONG lCurrentScore = (wTemp==0) ?(m_GameClientView.m_GoldControl.GetGold()) : (m_lCellScore*m_lCurrentTimes);
 	LONGLONG lCurrentScore = (wTemp==0) ?(lScore+m_lCellScore*m_lCurrentTimes) : (m_lCellScore*m_lCurrentTimes);
 
 	//明注加倍
@@ -1716,7 +1716,9 @@ LRESULT CGameClientEngine::OnConfirmScore(WPARAM wParam, LPARAM lParam)
 
 //	m_GameClientView.m_btOpenCard.ShowWindow(SW_HIDE);
 //	m_GameClientView.m_btAddScore.SetButtonImage(IDB_USERCONTROL_INVEST,AfxGetInstanceHandle(),false,false);
+
 	ScoreControl(SW_HIDE);
+
 //	m_GameClientView.m_btOpenCard.ShowWindow(SW_HIDE);
 //	m_GameClientView.m_btAddScore.EnableWindow(FALSE);
 	m_GameClientView.m_btCompareCard.EnableWindow(FALSE);
@@ -1758,8 +1760,10 @@ LRESULT	CGameClientEngine::OnLookCard(WPARAM wParam, LPARAM lParam)
 	//m_GameClientView.PerformCompareCard(IDChair,2);
 
 	//m_GameClientView.BeginMoveNumber();/**/
+
 	//设置控件
 	WORD wMeChairID=GetMeChairID();
+
 	//KillGameClock(IDI_USER_ADD_SCORE);
 
 	//重新定时
@@ -1912,7 +1916,7 @@ LRESULT	CGameClientEngine::OnOpenCard(WPARAM wParam, LPARAM lParam)
 	m_GameClientView.m_btGiveUp.EnableWindow(FALSE);
 	m_GameClientView.m_btLookCard.EnableWindow(FALSE);
 	//m_GameClientView.m_btOpenCard.EnableWindow(FALSE);
-//	m_GameClientView.m_btOpenCard.ShowWindow(SW_HIDE);
+	//m_GameClientView.m_btOpenCard.ShowWindow(SW_HIDE);
 
 	//查找人数
 	WORD bUserCount =0;

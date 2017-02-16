@@ -174,7 +174,7 @@ bool CDlgCustomRule::SaveCustomRule(LPBYTE pcbCustomRule, WORD wCustomSize)
 	if (m_DlgCustomGeneral.m_CustomGeneral.lEndTime<20||m_DlgCustomGeneral.m_CustomGeneral.lEndTime>99)
 	{
 		AfxMessageBox(L"[结束时间]输入范围为20-99");
-	 return false;
+		return false;
 	}
 	if (m_DlgCustomGeneral.m_CustomGeneral.StorageDeduct<0||m_DlgCustomGeneral.m_CustomGeneral.StorageDeduct>1000)
 	{

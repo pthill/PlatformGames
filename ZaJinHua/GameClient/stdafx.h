@@ -68,45 +68,45 @@
 #include "..\..\..\开发库\Include\GameFrameHead.h"
 
 #ifndef _DEBUG
-#ifndef _UNICODE
-#pragma comment (lib,"../../../开发库/Lib/Ansi/WHImage.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/GameFrame.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/GameEngine.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/SkinControl.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/ServiceCore.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/ShareControl.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuilib.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuimfcFactory.lib")
+	#ifndef _UNICODE
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/WHImage.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/GameFrame.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/GameEngine.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/SkinControl.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/ServiceCore.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/ShareControl.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuilib.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuimfcFactory.lib")
+	#else
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/WHImage.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/GameFrame.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/GameEngine.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/SkinControl.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/ServiceCore.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/ShareControl.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuilib.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuimfcFactory.lib")
+	#endif
 #else
-#pragma comment (lib,"../../../开发库/Lib/Unicode/WHImage.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/GameFrame.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/GameEngine.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/SkinControl.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/ServiceCore.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/ShareControl.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuilib.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuimfcFactory.lib")
-#endif
-#else
-#ifndef _UNICODE
-#pragma comment (lib,"../../../开发库/Lib/Ansi/WHImageD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/GameFrameD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/GameEngineD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/SkinControlD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/ServiceCoreD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Ansi/ShareControlD.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuilibD.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuimfcFactoryD.lib")
-#else
-#pragma comment (lib,"../../../开发库/Lib/Unicode/WHImageD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/GameFrameD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/GameEngineD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/SkinControlD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/ServiceCoreD.lib")
-#pragma comment (lib,"../../../开发库/Lib/Unicode/ShareControlD.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuilibD.lib")
-//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuimfcFactoryD.lib")
-#endif
+	#ifndef _UNICODE
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/WHImageD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/GameFrameD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/GameEngineD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/SkinControlD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/ServiceCoreD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Ansi/ShareControlD.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuilibD.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Ansi/FGuimfcFactoryD.lib")
+	#else
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/WHImageD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/GameFrameD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/GameEngineD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/SkinControlD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/ServiceCoreD.lib")
+	#pragma comment (lib,"../../../开发库/Lib/Unicode/ShareControlD.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuilibD.lib")
+	//#pragma comment (lib,"../../../开发库/Lib/Unicode/FGuimfcFactoryD.lib")
+	#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////

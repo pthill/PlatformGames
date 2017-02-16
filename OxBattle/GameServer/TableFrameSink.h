@@ -9,9 +9,11 @@
 #include "HistoryScore.h"
 
 #include "ServerControl.h"
+
 #define MAX_CARD					5
 #define MAX_CARDGROUP				5
 #define CONTROL_AREA				4
+
 //////////////////////////////////////////////////////////////////////////
 //历史记录
 #define MAX_SCORE_HISTORY			16									//历史个数
@@ -151,10 +153,12 @@ public:
 	virtual VOID RepositionSink();
 	//配置接口
 	virtual bool Initialization(IUnknownEx * pIUnknownEx);
+
 	//比赛接口
 public:
 	//设置基数
 	virtual void SetGameBaseScore(LONG lBaseScore){};
+
 	//游戏事件
 public:
 	//游戏开始
@@ -185,6 +189,7 @@ public:
 	virtual bool OnActionUserStandUp(WORD wChairID,IServerUserItem * pIServerUserItem, bool bLookonUser);
 	//用户同意
 	virtual bool OnActionUserOnReady(WORD wChairID,IServerUserItem * pIServerUserItem, VOID * pData, WORD wDataSize) { return true; }
+
 	//查询接口
 public:
 	//查询限额

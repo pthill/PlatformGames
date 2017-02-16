@@ -1071,7 +1071,7 @@ WORD CAndroidUserItemSink::EstimateWinner()
 //¼Ó×¢±¶Êý
 LONGLONG CAndroidUserItemSink::GetAddScoreTimes()
 {
-	LONGLONG lTimesSelect[3] = {1,2,5};
+	LONGLONG lTimesSelect[3] = {1,3,5};
 	LONGLONG lTimes = 10 - m_lCurrentTimes;
 	if(lTimes >= lTimesSelect[2])
 		lTimes = lTimesSelect[rand()%3];

@@ -102,10 +102,10 @@ BYTE CGameLogic::GetTimes(BYTE cbCardData[], BYTE cbCardCount)
 	else if(bTimes==8)return 3;
 	else if(bTimes==9)return 4;
 	else if(bTimes==10)return 5;
-	else if(bTimes==OX_THREE_SAME)return 5;
-	else if(bTimes==OX_FOUR_SAME)return 5;
-	else if(bTimes==OX_FOURKING)return 5;
-	else if(bTimes==OX_FIVEKING)return 5;
+	else if(bTimes==OX_THREE_SAME)return 8;
+	else if(bTimes==OX_FOUR_SAME)return 10;
+	else if(bTimes==OX_FOURKING)return 10;
+	else if(bTimes==OX_FIVEKING)return 10;
 
 	return 0;
 }

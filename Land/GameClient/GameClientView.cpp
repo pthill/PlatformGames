@@ -958,12 +958,10 @@ VOID CGameClientView::DrawGameView(CD3DDevice * pD3DDevice, INT nWidth, INT nHei
 	//绘画单位积分
 	_sntprintf( szOutNumT, CountArray(szOutNumT), TEXT("%s"),AddDecimal(m_lCellScore) );
 	int nOutNumber = lstrlen(szOutNumT);
-	if ( nOutNumber > 3 )
-	{
+	if ( nOutNumber > 3 ) {
 		DrawNumber(pD3DDevice,&m_TextureCellNumber, TEXT("+-,.0123456789"),szOutNumT,(nWidth)/2 -30 -20,140+3-30, DT_LEFT);
 	}
-	else
-	{
+	else {
 		DrawNumber(pD3DDevice,&m_TextureCellNumber, TEXT("+-,.0123456789"),szOutNumT,(nWidth)/2 -42 ,140+3-30, DT_CENTER);
 	}
 
@@ -3049,14 +3047,11 @@ CString CGameClientView::AddDecimal( LONGLONG lScore ,  bool bComma /*= true*/, 
 
 	//长度
 	int nLength = strScore.GetLength();
-	if (nLength==0) 
-	{
-		strReturn.Insert(0, TEXT("0.00") );
-	}
-	else if (nLength==1) {
+	if (nLength==1) {
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
 		strReturn.Insert(0, TEXT("0.0") );
 	}
-	if (nLength==2) 
+	else if (nLength==2) 
 	{
 		strReturn.Insert(0, strScore.GetAt(nLength-1) );
 		strReturn.Insert(0, strScore.GetAt(nLength-2) );

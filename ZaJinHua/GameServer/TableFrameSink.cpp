@@ -20,19 +20,20 @@ CList<CString, CString&> g_ListOperationRecord;						//操作控制记录
 ROOMUSERINFO	g_CurrentQueryUserInfo;								//当前查询用户信息
 
 //全局变量
-LONGLONG						g_lRoomStorageStart = 0LL;								//房间起始库存
-LONGLONG						g_lRoomStorageCurrent = 0LL;							//总输赢分
-LONGLONG						g_lStorageDeductRoom = 0LL;								//回扣变量
-LONGLONG						g_lStorageMax1Room = 0LL;								//库存封顶
-LONGLONG						g_lStorageMul1Room = 0LL;								//系统输钱比例
-LONGLONG						g_lStorageMax2Room = 0LL;								//库存封顶
-LONGLONG						g_lStorageMul2Room = 0LL;								//系统输钱比例
+LONGLONG						g_lRoomStorageStart = 0LL;			//房间起始库存
+LONGLONG						g_lRoomStorageCurrent = 0LL;		//总输赢分
+LONGLONG						g_lStorageDeductRoom = 0LL;			//回扣变量
+LONGLONG						g_lStorageMax1Room = 0LL;			//库存封顶
+LONGLONG						g_lStorageMul1Room = 0LL;			//系统输钱比例
+LONGLONG						g_lStorageMax2Room = 0LL;			//库存封顶
+LONGLONG						g_lStorageMul2Room = 0LL;			//系统输钱比例
 
 
 //定时器 0~30
 #define IDI_GAME_COMPAREEND					1									//结束定时器
 #define IDI_GAME_OPENEND					2									//结束定时器
 #define IDI_ADD_SCORE						3									//结束定时器
+#define IDI_ADD_SCORE_END					4									//结束定时器
 
 #define TIME_GAME_COMPAREEND				6000								//结束定时器
 #define TIME_GAME_OPENEND					6000								//结束定时器
@@ -176,16 +177,15 @@ void  CTableFrameSink::RepositionSink()
 	ZeroMemory(&m_StGameEnd,sizeof(m_StGameEnd));
 	ZeroMemory(m_cbPlayStatus,sizeof(m_cbPlayStatus));
 	ZeroMemory(m_cbGiveUpUser,sizeof(m_cbGiveUpUser));
-	for(int i=0;i<m_wPlayerCount;i++)
-	{
-		m_bMingZhu[i]=false;	
-		m_wCompardUser[i].RemoveAll();
-	}
-	ZeroMemory(m_cbRealPlayer, sizeof(m_cbRealPlayer));
-	ZeroMemory(m_cbAndroidStatus, sizeof(m_cbAndroidStatus));
+	for(int i=0;i<m_wPlayerCount;i++) {
+		m_bMingZhu[i]=false; 
+		m_wCompardUser[i].RemoveAll(); 
+	} 
+	ZeroMemory(m_cbRealPlayer, sizeof(m_cbRealPlayer)); 
+	ZeroMemory(m_cbAndroidStatus, sizeof(m_cbAndroidStatus)); 
 
 	//扑克变量
-	ZeroMemory(m_cbHandCardData,sizeof(m_cbHandCardData));
+	ZeroMemory(m_cbHandCardData,sizeof(m_cbHandCardData)); 
 
 	//下注信息
 	m_lMaxCellScore=0L;						
@@ -239,7 +239,7 @@ bool  CTableFrameSink::OnEventGameStart()
 			strInfo.Format(TEXT("当前库存：%I64d"), g_lRoomStorageCurrent);
 
 			m_pITableFrame->SendGameMessage(pIServerUserItem,strInfo,SMT_CHAT);
-		}	
+		}
 	}
 
 	//写如库存日志
@@ -267,7 +267,7 @@ bool  CTableFrameSink::OnEventGameStart()
 	m_bGameEnd=false;
 
 	//最大下注
-	LONGLONG lTimes=6L;
+	LONGLONG lTimes=0L;
 	BYTE cbAiCount = 0;
 	BYTE cbPlayCount = 0;
 	
@@ -282,6 +282,7 @@ bool  CTableFrameSink::OnEventGameStart()
 		//设置变量
 		m_cbPlayStatus[i]=TRUE;
 		m_lUserMaxScore[i]=lUserScore;
+
 		//更新房间用户信息
 		UpdateRoomUserInfo(pIServerUserItem, USER_SITDOWN);
 
@@ -297,29 +298,33 @@ bool  CTableFrameSink::OnEventGameStart()
 		}
 
 		//判断单注
-		LONGLONG Temp=lTimes;
+		/* LONGLONG Temp=lTimes;
 		if(m_lUserMaxScore[i]<10001)Temp=1L;
 		else if(m_lUserMaxScore[i]<100001)Temp=2L;
 		else if(m_lUserMaxScore[i]<1000001)Temp=3L;
 		else if(m_lUserMaxScore[i]<10000001)Temp=4L;
 		else if(m_lUserMaxScore[i]<100000001)Temp=5L;
-		if(lTimes>Temp)lTimes=Temp;
+		if(lTimes>Temp)lTimes=Temp; */
+
+		//人数判定
+		lTimes++;
 	}
 
-	//下注变量
-	m_lCellScore = 1;
-	//m_lCellScore=m_pGameServiceOption->lCellScore;
-	while((lTimes--)>0) m_lCellScore*=10;
+	//下注变量(最低要100)
+	//m_lCellScore = 100;
+	m_lCellScore=m_pGameServiceOption->lCellScore;
+	//while((lTimes--)>0) m_lCellScore*=10;
 
 	//基础分数
-	for(BYTE i=0;i<GAME_PLAYER;i++)
+	/* for(BYTE i=0;i<GAME_PLAYER;i++)
 	{
 		if(m_lUserMaxScore[i] != 0)
 			m_lCellScore=__min(m_lUserMaxScore[i],m_lCellScore);
-	}
+	} */
 
+	//开始设置
 	m_lCurrentTimes=1;
-	m_lMaxCellScore=m_lCellScore*10;
+	m_lMaxCellScore=m_lCellScore*lTimes*10;
 
 	//最大下注
 	for (WORD i=0;i<m_wPlayerCount;i++)
@@ -1001,7 +1006,10 @@ bool  CTableFrameSink::OnTimerMessage(DWORD wTimerID, WPARAM wBindParam)
 			NcaTextOut(str, m_pGameServiceOption->szServerName);
 		}		
 	}
-
+	if(wTimerID==IDI_ADD_SCORE_END)
+	{
+		OnUserOpenCard( m_wCurrentUser );
+	}
 	return false;
 }
 
@@ -1849,8 +1857,10 @@ bool CTableFrameSink::OnUserOpenCard(WORD wUserID)
 	//效验参数
 	ASSERT(m_lCompareCount>0);
 	if(!(m_lCompareCount>0))return false;
+
 	ASSERT(m_wCurrentUser==wUserID);
 	if(m_wCurrentUser!=wUserID)return false;
+
 	//LONGLONG lTemp=(m_bMingZhu[wUserID])?6:5;
 	//ASSERT((m_lUserMaxScore[wUserID]-m_lTableScore[wUserID]+m_lCompareCount) < (m_lMaxCellScore*lTemp));
 	//if((m_lUserMaxScore[wUserID]-m_lTableScore[wUserID]+m_lCompareCount) >= (m_lMaxCellScore*lTemp))return false;
@@ -1880,8 +1890,9 @@ bool CTableFrameSink::OnUserOpenCard(WORD wUserID)
 			wWinner=w;
 		}
 	}
+
 	ASSERT(m_cbPlayStatus[wWinner]==TRUE);
-	if(m_cbPlayStatus[wWinner]==FALSE)return false;
+	if(m_cbPlayStatus[wWinner]==FALSE) return false;
 
 	//胜利玩家
 	m_wBankerUser = wWinner;
@@ -1895,7 +1906,9 @@ bool CTableFrameSink::OnUserOpenCard(WORD wUserID)
 	m_pITableFrame->SendLookonData(INVALID_CHAIR,SUB_S_OPEN_CARD,&OpenCard,sizeof(OpenCard));
 
 	//结束游戏
-	for(WORD i=0;i<GAME_PLAYER;i++)if(m_cbPlayStatus[i]==TRUE)m_wFlashUser[i] = TRUE;
+	for(WORD i=0;i<GAME_PLAYER;i++)if(m_cbPlayStatus[i]==TRUE)
+		m_wFlashUser[i] = TRUE;
+	
 	OnEventGameConclude(GAME_PLAYER,NULL,GER_OPENCARD);
 
 	return true;
@@ -1904,6 +1917,9 @@ bool CTableFrameSink::OnUserOpenCard(WORD wUserID)
 //加注事件
 bool CTableFrameSink::OnUserAddScore(WORD wChairID, LONGLONG lScore, bool bGiveUp, bool bCompareCard)
 {
+	//最大结束
+	bool bMaxCellEnd = false;
+
 	if (bGiveUp==false)				//设置数据
 	{
 		//状态效验
@@ -1913,23 +1929,43 @@ bool CTableFrameSink::OnUserAddScore(WORD wChairID, LONGLONG lScore, bool bGiveU
 		//金币效验
 		ASSERT(lScore>=0 && lScore%m_lCellScore==0);
 		ASSERT((lScore+m_lTableScore[wChairID])<=m_lUserMaxScore[wChairID]);
-		if (lScore<0 || lScore%m_lCellScore!=0) return false;
-		if ((lScore+m_lTableScore[wChairID])>m_lUserMaxScore[wChairID]) return false;
 
+		if (lScore<0 || lScore%m_lCellScore!=0) 
+			return false;
+
+		if ((lScore+m_lTableScore[wChairID])>m_lUserMaxScore[wChairID]) 
+			return false;
+		
 		IServerUserItem *pIserberUser=m_pITableFrame->GetTableUserItem(wChairID);
 		if(pIserberUser->GetUserScore() < m_lTableScore[wChairID]+lScore) return false;
 
 		//当前倍数
 		LONGLONG lTimes=(m_bMingZhu[wChairID] || bCompareCard)?2:1;
-		if(m_bMingZhu[wChairID] && bCompareCard)lTimes=4;
-		LONGLONG lTemp=lScore/m_lCellScore/lTimes;
+		if(m_bMingZhu[wChairID] && bCompareCard) 
+			lTimes=4;
+
+		LONGLONG lTemp = lScore/m_lCellScore/lTimes;
 		ASSERT(m_lCurrentTimes<=lTemp && m_lCurrentTimes<=m_lMaxCellScore/m_lCellScore);
-		if(!(m_lCurrentTimes<=lTemp && m_lCurrentTimes<=m_lMaxCellScore/m_lCellScore))return false;
+		if(!(m_lCurrentTimes<=lTemp && m_lCurrentTimes<=m_lMaxCellScore/m_lCellScore))
+			return false;
+
 		m_lCurrentTimes = lTemp;
+		
+		// 取封顶值
+		LONGLONG lSumScore = 0L;
+		for (WORD i=0; i<m_wPlayerCount; i++) {
+			lSumScore += m_lTableScore[i];
+		}
+		
+		//尾数投注
+		LONGLONG lLastScore = lScore;
+		lScore = __min( (m_lMaxCellScore-lSumScore), lScore );
+		if(lLastScore!=lScore) bMaxCellEnd = true; 
 
 		//用户注金
 		m_lTableScore[wChairID]+=lScore;
 	}
+	
 
 	//设置用户
 	if(!bCompareCard)
@@ -1946,13 +1982,16 @@ bool CTableFrameSink::OnUserAddScore(WORD wChairID, LONGLONG lScore, bool bGiveU
 		}
 		m_wCurrentUser=wNextPlayer;
 	}
-
+	
 	//构造数据
 	CMD_S_AddScore AddScore;
 	AddScore.lCurrentTimes=m_lCurrentTimes;
 	AddScore.wCurrentUser=m_wCurrentUser;
 	AddScore.wAddScoreUser=wChairID;
 	AddScore.lAddScoreCount=lScore;
+	
+	//封顶比牌
+	bCompareCard = bMaxCellEnd;
 
 	//判断状态
 	AddScore.wCompareState=( bCompareCard )?TRUE:FALSE;
@@ -1960,10 +1999,16 @@ bool CTableFrameSink::OnUserAddScore(WORD wChairID, LONGLONG lScore, bool bGiveU
 	//发送数据
 	m_pITableFrame->SendTableData(INVALID_CHAIR,SUB_S_ADD_SCORE,&AddScore,sizeof(AddScore));
 	m_pITableFrame->SendLookonData(INVALID_CHAIR,SUB_S_ADD_SCORE,&AddScore,sizeof(AddScore));
+	
+	//判断封顶
+	if( bMaxCellEnd==true )  {
+		m_lCompareCount = 1;
+		OnUserOpenCard( m_wCurrentUser );
+		return true;
+	}
 
 	//设置定时器
 	m_pITableFrame->SetGameTimer(IDI_ADD_SCORE,TIME_ADD_SCORE*36,1,0);
-
 	return true;
 }
 

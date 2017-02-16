@@ -176,6 +176,7 @@ HWND CGameServiceManager::CreateCustomRule( CWnd * pParentWnd, CRect rcCreate, L
 	//设置变量
 	m_DlgCustomRule.SetCustomRule(pcbCustomRule,wCustonSize);
 	//m_DlgCustomRule.DefaultCustomRule(pcbCustomRule,wCustonSize);
+
 	//显示窗口
 	m_DlgCustomRule.SetWindowPos(NULL,rcCreate.left,rcCreate.top,rcCreate.Width(),rcCreate.Height(),SWP_NOZORDER|SWP_SHOWWINDOW);
 

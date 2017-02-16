@@ -381,7 +381,7 @@ bool CTableFrameSink::OnEventGameConclude(WORD wChairID, IServerUserItem * pISer
 			//¶Ô±ÈÍæ¼Ò
 			for (WORD i=0;i<m_wPlayerCount;i++)
 			{
-				if(i==m_wBankerUser || m_cbPlayStatus[i]==FALSE)continue;
+				if(i==m_wBankerUser || m_cbPlayStatus[i]==FALSE) continue;
 
 				ASSERT(m_cbOxCard[i]<2);
 

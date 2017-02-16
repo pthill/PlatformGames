@@ -2060,6 +2060,7 @@ VOID CTableFrameSink::StorageOptimize()
 	// 获取系统输赢
 	LONGLONG lSystemScore = 0;
 	bool bAllEat = false;
+
 	JudgeSystemScore(m_cbTableCardArray, lSystemScore, bAllEat);
 
 	// 系统输钱
@@ -2111,9 +2112,9 @@ VOID CTableFrameSink::StorageOptimize()
 		{
 			//交换手牌
 			BYTE bTempCardData[5] = {0};
-			CopyMemory(bTempCardData,					m_cbTableCardArray[0],				sizeof(bTempCardData));
-			CopyMemory(m_cbTableCardArray[0],			m_cbTableCardArray[nOkInedex + 1],		sizeof(bTempCardData));
-			CopyMemory(m_cbTableCardArray[nOkInedex + 1],	bTempCardData,						sizeof(bTempCardData));
+			CopyMemory(bTempCardData,						m_cbTableCardArray[0],					sizeof(bTempCardData));
+			CopyMemory(m_cbTableCardArray[0],				m_cbTableCardArray[nOkInedex + 1],		sizeof(bTempCardData));
+			CopyMemory(m_cbTableCardArray[nOkInedex + 1],	bTempCardData,							sizeof(bTempCardData));
 		}
 
 		return;
@@ -2165,9 +2166,9 @@ VOID CTableFrameSink::StorageOptimize()
 			{
 				//交换手牌
 				BYTE bTempCardData[5] = {0};
-				CopyMemory(bTempCardData,					m_cbTableCardArray[0],				sizeof(bTempCardData));
-				CopyMemory(m_cbTableCardArray[0],			m_cbTableCardArray[nOkInedex + 1],		sizeof(bTempCardData));
-				CopyMemory(m_cbTableCardArray[nOkInedex + 1],	bTempCardData,						sizeof(bTempCardData));
+				CopyMemory(bTempCardData,						m_cbTableCardArray[0],					sizeof(bTempCardData));
+				CopyMemory(m_cbTableCardArray[0],				m_cbTableCardArray[nOkInedex + 1],		sizeof(bTempCardData));
+				CopyMemory(m_cbTableCardArray[nOkInedex + 1],	bTempCardData,							sizeof(bTempCardData));
 			}
 		}
 		return;
@@ -2197,10 +2198,12 @@ void CTableFrameSink::JudgeSystemScore(BYTE bCardData[5][5], LONGLONG& lSystemSc
 	// 比较倍数
 	bool bXianWin[4] = { false, false, false, false };							//比较输赢
 	BYTE bMultiple[4] = { 1, 1, 1, 1 };											//比较倍数
+
 	for (int i = 0; i < 4; i++)
 	{
 		bXianWin[i] = (m_GameLogic.CompareCard(bCardData[0], 5,bCardData[i+1], 5, bMultiple[i]) == 1);
 	}
+
 	bAllEat = (bXianWin[0] == bXianWin[1]) && (bXianWin[1] == bXianWin[2]) && (bXianWin[2] == bXianWin[3]);
 
 	// 计算系统输赢

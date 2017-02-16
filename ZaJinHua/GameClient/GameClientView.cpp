@@ -493,15 +493,14 @@ CString CGameClientView::AddDecimal( LONGLONG lScore , bool bPlus /*= false*/)
 
 	//长度
 	int nLength = strScore.GetLength();
-	if (nLength==0) 
-	{
-		strReturn.Insert(0, TEXT("0.00") );
-	}
-	else if (nLength==1) {
+	if (nLength==1) {
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
 		strReturn.Insert(0, TEXT("0.0") );
 	}
-	if (nLength==2) 
+	else if (nLength==2) 
 	{
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
+		strReturn.Insert(0, strScore.GetAt(nLength-1) );
 		strReturn.Insert(0, TEXT("0.") );
 	}
 	else if(nLength>2)
@@ -851,7 +850,7 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 				{
 					m_PngImagePlayerFrame.DrawImage(pDC,m_ptPlayerFrame[i].x,m_ptPlayerFrame[i].y,SizePlayerFrame.cx,SizePlayerFrame.cy,0,0);
 					pDC->SetTextColor((i>0)?RGB(250,250,250):RGB(220,220,220));					
-					DrawTextString(pDC,pClientUserItem->GetNickName(),RGB(255,253,0),RGB(0,0,0),m_ptPlayerFrame[i].x+5,m_ptPlayerFrame[i].y+9,DT_CENTER|DT_END_ELLIPSIS);
+					DrawTextString(pDC,pClientUserItem->GetNickName(),RGB(255,253,0),RGB(0,0,0),m_ptPlayerFrame[i].x+5,m_ptPlayerFrame[i].y+9,DT_LEFT|DT_END_ELLIPSIS);
 
 				}
 				else
@@ -897,7 +896,7 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 				}
 				else
 				{
-					DrawTextString(pDC,szBuffer,RGB(162,255,0),RGB(0,0,0),m_ptPlayerFrame[i].x+5,m_ptPlayerFrame[i].y+32,DT_CENTER|DT_END_ELLIPSIS);
+					DrawTextString(pDC,szBuffer,RGB(162,255,0),RGB(0,0,0),m_ptPlayerFrame[i].x+5,m_ptPlayerFrame[i].y+32,DT_LEFT|DT_END_ELLIPSIS);
 				}
 
 				//用户地址
@@ -905,7 +904,7 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 				{
 					tagUserInfo * pUserInfo = pClientUserItem->GetUserInfo();
 					pDC->SetTextColor((i>0)?RGB(250,250,250):RGB(220,220,220));					
-					DrawTextString(pDC, pUserInfo->szUserAddress, RGB(255,253,0), RGB(0,0,0), m_ptPlayerFrame[i].x+5, m_ptPlayerFrame[i].y+52, DT_CENTER|DT_END_ELLIPSIS);
+					DrawTextString(pDC, pUserInfo->szUserAddress, RGB(255,253,0), RGB(0,0,0), m_ptPlayerFrame[i].x+5, m_ptPlayerFrame[i].y+52, DT_LEFT|DT_END_ELLIPSIS);
 				}
 
 				//其他信息
@@ -917,17 +916,14 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 				}
 
 				//准备标志
-				if (pClientUserItem->GetUserStatus()==US_READY) 
-				{
+				if (pClientUserItem->GetUserStatus()==US_READY) {
 					DrawUserReady(pDC,m_ptReady[i].x,m_ptReady[i].y);
 				}
 			}
 		}
 
 		//庄家信息
-		if (m_wBankerUser<5)
-		{
-			//庄家标志
+		if (m_wBankerUser<5) {
 			m_ImageBanker.TransDrawImage(pDC,m_PointBanker[m_wBankerUser].x,m_PointBanker[m_wBankerUser].y,m_ImageBanker.GetWidth(),m_ImageBanker.GetHeight(),0,0,RGB(255,0,255));
 		}
 
@@ -962,22 +958,21 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 						
 			//补小数点
 			if(i<2) {
-				m_PngaImageXZNumber.DrawImage(pDC,nWidth/2-61+(10-i-1)*SizeXZNumber.cx,nHeight-500,SizeXZNumber.cx,SizeXZNumber.cy,(3)*SizeXZNumber.cx,0,SizeXZNumber.cx,SizeXZNumber.cy);
-				m_PngaImageXZNumber.DrawImage(pDC,nWidth/2-61+(10-i-2)*SizeXZNumber.cx,nHeight-500,SizeXZNumber.cx,SizeXZNumber.cy,(4)*SizeXZNumber.cx,0,SizeXZNumber.cx,SizeXZNumber.cy);
+				if(i==0) m_PngaImageXZNumber.DrawImage(pDC,nWidth/2-61+(10-i-1)*SizeXZNumber.cx,nHeight-500,SizeXZNumber.cx,SizeXZNumber.cy,(4)*SizeXZNumber.cx,0,SizeXZNumber.cx,SizeXZNumber.cy);
+				m_PngaImageXZNumber.DrawImage(pDC,nWidth/2-61+(10-i-2)*SizeXZNumber.cx,nHeight-500,SizeXZNumber.cx,SizeXZNumber.cy,(3)*SizeXZNumber.cx,0,SizeXZNumber.cx,SizeXZNumber.cy);
+				m_PngaImageXZNumber.DrawImage(pDC,nWidth/2-61+(10-i-3)*SizeXZNumber.cx,nHeight-500,SizeXZNumber.cx,SizeXZNumber.cy,(4)*SizeXZNumber.cx,0,SizeXZNumber.cx,SizeXZNumber.cy);
 			}
 
 			//个人注值
 			int iTemp=0;
 			int iX=m_ImageNumber.GetWidth();
-			for (int i=iCount-1;i>=0;i--)
-			{
+			for (int i=iCount-1;i>=0;i--) {
 				m_ImageNumber.TransDrawImage(pDC,nWidth/2+39+(iX/10)*(iTemp++),nHeight/2-296,iX/10,m_ImageNumber.GetHeight(),iX/10*(int)lCell[i],0,RGB(255,0,255));
 			}
 		}
 
 		//得分数字滚动动画
-		for( WORD i = 0; i < GAME_PLAYER; i++ )
-		{
+		for( WORD i = 0; i < GAME_PLAYER; i++ ) {
 			m_NumberControl[i].DrawNumberControl(pDC);
 		}
 
@@ -1231,9 +1226,7 @@ VOID CGameClientView::DrawGameView(CDC * pDC, INT nWidth, INT nHeight)
 
 		//输出信息
 		if(m_wWaitUserChoice==TRUE)
-		{
 			m_PngWaitSelect.DrawImage(pDC,(nWidth-m_PngWaitSelect.GetWidth())/2,(nHeight-m_PngWaitSelect.GetHeight())/2);
-		}
 		else 
 			m_PngSelectPlayer.DrawImage(pDC,(nWidth-m_PngSelectPlayer.GetWidth())/2,(nHeight-m_PngSelectPlayer.GetHeight())/2);
 	}
